@@ -104,35 +104,35 @@ const Home = () => {
                             spaceBetween={30}
                             breakpoints={{
                                 280: {
-                                    width: 280,
+                                    // width: 280,
                                     slidesPerView: 1,
                                 },
                                 375: {
-                                    width: 375,
+                                    // width: 375,
                                     slidesPerView: 1,
                                 },
                                 425: {
-                                    width: 425,
+                                    // width: 425,
                                     slidesPerView: 1,
                                 },
                                 576: {
-                                    width: 576,
+                                    // width: 576,
                                     slidesPerView: 3,
                                 },
                                 768: {
-                                    width: 768,
+                                    // width: 768,
                                     slidesPerView: 3,
                                 },
                                 1024: {
-                                    width: 1024,
+                                    // width: 1024,
                                     slidesPerView: 4,
                                 },
                                 2048: {
-                                    width: 2048,
+                                    // width: 2048,
                                     slidesPerView: 4,
                                 },
                                 2560: {
-                                    width: 2560,
+                                    // width: 2560,
                                     slidesPerView: 5,
                                 },
                                 3840: {
@@ -145,7 +145,7 @@ const Home = () => {
                                 <SwiperSlide key={i}>
                                     <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${i}`}>
                                         <div className="img-box">
-                                            <img src={objectImage} className="w-100" />
+                                            <img src={objectImage} className="w-full" />
                                         </div>
                                         <div className="item-body flex flex-col gap-1 p-3">
                                             <span className="text-lg text-warning font-semibold">{item.status}</span>
