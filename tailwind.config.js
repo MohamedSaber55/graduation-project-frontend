@@ -28,6 +28,9 @@ export default {
           // DEFAULT: "#4f23ff",
           // DEFAULT: "#ff9c01",
         },
+        brown: {
+          DEFAULT: "#7D5C49",
+        },
         second: {
           DEFAULT: "#d57542",
           // DEFAULT: "#ffc001",

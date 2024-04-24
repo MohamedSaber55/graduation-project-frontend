@@ -7,7 +7,35 @@ import 'swiper/css/free-mode';
 import moment from "moment";
 import { Link } from "react-router-dom";
 import objectImage from "./../assets/item.png"
+import Select from "react-select"
 const Home = () => {
+    const theme = localStorage.getItem("theme") || "light"
+
+    const categoryOptions = [
+        { value: "apple", label: "Apple" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" }
+    ];
+    const handleChange = (selectedOption) => {
+        console.log("Selected Option:", selectedOption);
+    };
+    const customStyles = {
+        control: (provided, state) => ({
+            ...provided,
+            border: "none",
+            borderRadius: "0.5rem",
+            backgroundColor: theme === "dark" ? "#1a202c" : "#f3f4f6",
+            color: theme === "dark" ? "#fff" : "#000",
+        }),
+        singleValue: (provided, state) => ({
+            ...provided,
+            color: theme === "dark" ? "#fff" : "#000",
+        }),
+        menubar: (provided, state) => ({
+            ...provided,
+            backgroundColor: theme === "dark" ? "#1a202c" : "#f3f4f6",
+        })
+    };
     return (
         <div className="bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen">
             <div className="container flex flex-col gap-10">
@@ -22,7 +50,11 @@ const Home = () => {
                     <h3 className="text-3xl font-semibold my-5">Search for the lost</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center justify-between gap-5 py-5">
                         <input type="text" className="rounded-xl bg-light dark:bg-dark-light p-2 focus:outline-none" placeholder="Search..." />
-                        <input type="text" className="rounded-xl bg-light dark:bg-dark-light p-2 focus:outline-none" placeholder="Category" />
+                        <Select styles={customStyles}
+                            options={categoryOptions}
+                            onChange={handleChange}
+                        // className="bg-light dark: rounded" 
+                        />
                         <input type="text" className="rounded-xl bg-light dark:bg-dark-light p-2 focus:outline-none" placeholder="Address" />
                         <button className="bg-main hover:bg-second rounded-xl p-2 text-light">Search Now</button>
                     </div>
@@ -75,7 +107,7 @@ const Home = () => {
                         >
                             {data?.map((item, i) => (
                                 <SwiperSlide key={i}>
-                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${i}`}>
+                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
                                         <div className="img-box">
                                             <img src={item.image} className="w-100" />
                                         </div>
@@ -143,7 +175,7 @@ const Home = () => {
                         >
                             {data?.map((item, i) => (
                                 <SwiperSlide key={i}>
-                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${i}`}>
+                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
                                         <div className="img-box">
                                             <img src={objectImage} className="w-full" />
                                         </div>
