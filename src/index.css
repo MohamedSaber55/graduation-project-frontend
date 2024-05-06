@@ -2,14 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
+body {
     font-family: Arial, Helvetica, sans-serif;
 }
-.css-13cymwt-control{
+
+:root {
+    scroll-behavior: smooth;
+}
+
+
+/* Hide scrollbar for webkit-based browsers */
+.hidden-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* background-color: aqua; */
+}
+
+.css-13cymwt-control {
     background-color: #f3f4f6 !important;
     border: none !important;
     border-radius: 12px !important;
 }
+
 /* .css-1nmdiq5-menu{
-    background-color: #1a202c !important;
+    background-color: #1f2937 !important;
 } */
+
+input,
+textarea {
+    outline: 0;
+}

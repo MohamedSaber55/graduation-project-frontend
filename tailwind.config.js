@@ -41,7 +41,7 @@ export default {
         },
         dark: {
           DEFAULT: "#111827",
-          light: "#1a202c",
+          light: "#1f2937",
         },
         light: {
           DEFAULT: "#f3f4f6",

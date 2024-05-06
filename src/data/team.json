@@ -1,0 +1,76 @@
+{
+    "team": [
+        {
+            "id": 1,
+            "name": "Mohamed Saber",
+            "role": "Front End Developer",
+            "email": "mohamed.saber.7753@gmail.com",
+            "image": "/src/assets/team/saber-2.jpg",
+            "social": {
+                "linkedin": "https://www.linkedin.com/in/mohamedsaber5050",
+                "facebook": "https://www.facebook.com/mo7amedsaber5050",
+                "whatsapp": "https://wa.me/+201210529969"
+            }
+        },
+        {
+            "id": 2,
+            "name": "Hesham Aref Abdulsalam",
+            "role": "Front End Developer",
+            "email": "heshamaref38@gmail.com",
+            "image": "/src/assets/team/hesham.jpg",
+            "social": {
+                "linkedin": "https://www.linkedin.com/in/hesham-aref-b14b53255/",
+                "facebook": "https://www.facebook.com/hesham.aref.980",
+                "whatsapp": "https://wa.me/+201067872070"
+            }
+        },
+        {
+            "id": 3,
+            "name": "Ziad Bahaa Sayed ",
+            "role": "Back End Developer",
+            "email": "bob@example.com",
+            "image": "/src/assets/team/ziad.jpg",
+            "social": {
+                "linkedin": "https://www.linkedin.com/in/ziad-bahaa-b04561265/",
+                "facebook": "https://www.facebook.com/profile.php?id=100006378762677&mibextid=ZbWKwL",
+                "whatsapp": "https://wa.link/zi598x"
+            }
+        },
+        {
+            "id": 4,
+            "name": "Eslam Nassar",
+            "role": "Back End Developer",
+            "email": "alice@example.com",
+            "image": "/src/assets/team/islam.jpg",
+            "social": {
+                "linkedin": "https://www.linkedin.com/in/islam-nassar-53870121b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+                "facebook": "https://www.facebook.com/eslam.naser.58173000?mibextid=ZbWKwL",
+                "whatsapp": "https://wa.me/201116276577"
+            }
+        },
+        {
+            "id": 5,
+            "name": "Basma Abdelwahab",
+            "role": "UI/UX Designer",
+            "email": "basmasaleh584@gmail.com",
+            "image": "./src/assets/team/team-girl.png",
+            "social": {
+                "linkedin": "",
+                "facebook": "https://www.facebook.com/basma.saleh.1044186?mibextid=JRoKGi",
+                "whatsapp": "https://wa.me/+201143232540"
+            }
+        },
+        {
+            "id": 6,
+            "name": "Asmaa Mohammed Ghanem",
+            "role": "Machine Learning",
+            "email": "asmaamohamedghanem006@gmail.com",
+            "image": "./src/assets/team/team-girl.png",
+            "social": {
+                "linkedin": "",
+                "facebook": "https://www.facebook.com/profile.php?id=100075943406094",
+                "whatsapp": "https://wa.me/qr/G2MGMSDNTHHVE1"
+            }
+        }
+    ]
+}

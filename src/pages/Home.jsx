@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 import { data } from "./../data/data.json"
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -8,13 +9,13 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import objectImage from "./../assets/item.png"
 import Select from "react-select"
+import { useSelector } from "react-redux";
 const Home = () => {
-    const theme = localStorage.getItem("theme") || "light"
+    const theme = useSelector((state) => state.theme.theme);
 
     const categoryOptions = [
-        { value: "apple", label: "Apple" },
-        { value: "banana", label: "Banana" },
-        { value: "orange", label: "Orange" }
+        { value: "person", label: "Person" },
+        { value: "item", label: "Item" },
     ];
     const handleChange = (selectedOption) => {
         console.log("Selected Option:", selectedOption);
@@ -23,9 +24,13 @@ const Home = () => {
         control: (provided, state) => ({
             ...provided,
             border: "none",
-            borderRadius: "0.5rem",
-            backgroundColor: theme === "dark" ? "#1a202c" : "#f3f4f6",
+            borderRadius: "6px",
+            // borderRadius: "0.5rem",
+            backgroundColor: theme === "dark" ? "#1f293700" : "#f3f4f600",
             color: theme === "dark" ? "#fff" : "#000",
+            outline: "none",
+            // borderColor: state.isFocused ? (theme === "dark" ? "#E1752C" : "#E1752C") : "#E1752C", // Change outline color when focused
+            boxShadow: state.isFocused ? `0 0 0 1px ${theme === "dark" ? "#E1752C" : "#E1752C"}` : "0 0 0 1px #E1752C", // Add shadow when focused
         }),
         singleValue: (provided, state) => ({
             ...provided,
@@ -33,8 +38,20 @@ const Home = () => {
         }),
         menubar: (provided, state) => ({
             ...provided,
-            backgroundColor: theme === "dark" ? "#1a202c" : "#f3f4f6",
-        })
+            backgroundColor: theme === "dark" ? "#1f2937" : "#f3f4f6",
+        }),
+        menu: (provided, state) => ({
+            ...provided,
+            backgroundColor: theme === "dark" ? "#1f2937" : "#f3f4f6",
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isFocused ? (theme === "dark" ? "#4a5568" : "#edf2f7") : "transparent",
+            color: theme === "dark" ? "#fff" : "#000",
+            "&:hover": {
+                backgroundColor: theme === "dark" ? "#2d3748" : "#cbd5e0",
+            },
+        }),
     };
     return (
         <div className="bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen">
@@ -42,20 +59,20 @@ const Home = () => {
                 <div className="title text-center py-10 text-dark dark:text-light">
                     <h1 className="text-5xl text-second font-bold mb-3">TRACKER</h1>
                     <p className="text-sm sm:text-base lg:text-lg">The connecting  between the advertiser of the missing and the searcher for any missing
-                        {/* <br /> */}
+                        <br />
                         help you meet your need
                     </p>
                 </div>
                 <div className="search-box container bg-white dark:bg-dark p-6 rounded-xl shadow-lg">
                     <h3 className="text-3xl font-semibold my-5">Search for the lost</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center justify-between gap-5 py-5">
-                        <input type="text" className="rounded-xl bg-light dark:bg-dark-light p-2 focus:outline-none" placeholder="Search..." />
+                        <input type="text" className="rounded-xl border border-main bg-transparent p-2 focus:outline-none" placeholder="Search..." />
                         <Select styles={customStyles}
                             options={categoryOptions}
+                            placeholder="Category"
                             onChange={handleChange}
-                        // className="bg-light dark: rounded" 
                         />
-                        <input type="text" className="rounded-xl bg-light dark:bg-dark-light p-2 focus:outline-none" placeholder="Address" />
+                        <input type="text" className="rounded-xl border border-main bg-transparent p-2 focus:outline-none" placeholder="Address" />
                         <button className="bg-main hover:bg-second rounded-xl p-2 text-light">Search Now</button>
                     </div>
                 </div>
@@ -65,75 +82,7 @@ const Home = () => {
                         <Swiper
                             modules={[FreeMode]}
                             freeMode={{ clickable: true }}
-                            spaceBetween={30}
-                            breakpoints={{
-                                280: {
-                                    width: 280,
-                                    slidesPerView: 1,
-                                },
-                                375: {
-                                    width: 375,
-                                    slidesPerView: 1,
-                                },
-                                425: {
-                                    width: 425,
-                                    slidesPerView: 1,
-                                },
-                                576: {
-                                    width: 576,
-                                    slidesPerView: 3,
-                                },
-                                768: {
-                                    width: 768,
-                                    slidesPerView: 3,
-                                },
-                                1024: {
-                                    width: 1024,
-                                    slidesPerView: 4,
-                                },
-                                2048: {
-                                    width: 2048,
-                                    slidesPerView: 4,
-                                },
-                                2560: {
-                                    width: 2560,
-                                    slidesPerView: 5,
-                                },
-                                3840: {
-                                    width: 3840,
-                                    slidesPerView: 5,
-                                },
-                            }}
-                        >
-                            {data?.map((item, i) => (
-                                <SwiperSlide key={i}>
-                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
-                                        <div className="img-box">
-                                            <img src={item.image} className="w-100" />
-                                        </div>
-                                        <div className="item-body flex flex-col gap-1 p-3">
-                                            <span className="text-lg text-warning font-semibold">{item.status}</span>
-                                            {/* <span className="text-lg font-semibold">{item.category}</span> */}
-                                            <h5 className="text-xl font-bold">{item.name}</h5>
-                                            <p className="text-lg">{item.age} Years</p>
-                                        </div>
-                                        <div className="bg-gray-300 dark:bg-gray-700 p-3">
-                                            Since {" "}
-                                            {moment(item.date, "DDMMYYYY").fromNow()}
-                                        </div>
-                                    </Link>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
-                    </div>
-                </div>
-                <div className="container bg-white dark:bg-dark p-6 rounded-xl shadow-lg my-5">
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-semibold my-5 text-center">Lost Objects</h3>
-                    <div className="py-5">
-                        <Swiper
-                            modules={[FreeMode]}
-                            freeMode={{ clickable: true }}
-                            spaceBetween={30}
+                            spaceBetween={20}
                             breakpoints={{
                                 280: {
                                     // width: 280,
@@ -168,7 +117,7 @@ const Home = () => {
                                     slidesPerView: 5,
                                 },
                                 3840: {
-                                    width: 3840,
+                                    // width: 3840,
                                     slidesPerView: 5,
                                 },
                             }}
@@ -177,7 +126,75 @@ const Home = () => {
                                 <SwiperSlide key={i}>
                                     <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
                                         <div className="img-box">
-                                            <img src={objectImage} className="w-full" />
+                                            <img src={item.image} className="w-full" />
+                                        </div>
+                                        <div className="item-body flex flex-col gap-1 p-3">
+                                            <span className="text-lg text-warning font-semibold">{item.status}</span>
+                                            {/* <span className="text-lg font-semibold">{item.category}</span> */}
+                                            <h5 className="text-xl font-bold">{item.name}</h5>
+                                            <p className="text-lg">{item.age} Years</p>
+                                        </div>
+                                        <div className="bg-gray-300 dark:bg-gray-700 p-3">
+                                            Since {" "}
+                                            {moment(item.date, "DDMMYYYY").fromNow()}
+                                        </div>
+                                    </Link>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
+                </div>
+                <div className="container bg-white dark:bg-dark p-6 rounded-xl shadow-lg my-5">
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-semibold my-5 text-center">Lost Objects</h3>
+                    <div className="py-5">
+                        <Swiper
+                            modules={[FreeMode]}
+                            freeMode={{ clickable: true }}
+                            spaceBetween={20}
+                            breakpoints={{
+                                280: {
+                                    // width: 280,
+                                    slidesPerView: 1,
+                                },
+                                375: {
+                                    // width: 375,
+                                    slidesPerView: 1,
+                                },
+                                425: {
+                                    // width: 425,
+                                    slidesPerView: 1,
+                                },
+                                576: {
+                                    // width: 576,
+                                    slidesPerView: 3,
+                                },
+                                768: {
+                                    // width: 768,
+                                    slidesPerView: 3,
+                                },
+                                1024: {
+                                    // width: 1024,
+                                    slidesPerView: 4,
+                                },
+                                2048: {
+                                    // width: 2048,
+                                    slidesPerView: 4,
+                                },
+                                2560: {
+                                    // width: 2560,
+                                    slidesPerView: 5,
+                                },
+                                3840: {
+                                    // width: 3840,
+                                    slidesPerView: 5,
+                                },
+                            }}
+                        >
+                            {data?.map((item, i) => (
+                                <SwiperSlide key={i}>
+                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
+                                        <div className="img-box">
+                                            <img src={item.image} className="w-full" />
                                         </div>
                                         <div className="item-body flex flex-col gap-1 p-3">
                                             <span className="text-lg text-warning font-semibold">{item.status}</span>

@@ -10,6 +10,9 @@ import ResetPass from './pages/ResetPass'
 import NotFound from './pages/NotFound'
 import Welcome from './pages/Welcome'
 import Post from './pages/Post'
+import AddPost from './pages/AddPost'
+import Posts from './pages/Posts'
+import Team from './pages/Team'
 
 function App() {
 
@@ -20,7 +23,10 @@ function App() {
 
         { path: "/about", element: <About /> },
         { path: "/contact", element: <Contact /> },
+        { path: "/posts", element: <Posts /> },
         { path: "/post/:postId", element: <Post /> },
+        { path: "/post/add", element: <AddPost /> },
+        { path: "/team", element: <Team /> },
         { path: "/forgetpass", element: <ForgetPass /> },
         { path: "/resetpass", element: <ResetPass /> },
         { path: "*", element: <NotFound /> }
