@@ -34,7 +34,7 @@ const Navbar = () => {
         return () => window.removeEventListener("scroll", handleScroll)
     }, [])
     return (
-        <nav ref={navbarRef} className={`bg-light h-16 dark:bg-dark text-dark dark:text-white select-none ${position} ${top} duration-300 left-0 right-0 z-50 shadow-md dark:shadow-black`}>
+        <nav ref={navbarRef} className={`bg-light h-16 dark:bg-dark text-dark dark:text-white select-none ${position} ${top} duration-300 left-0 right-0 z-50 shadow-md dark:shadow-black/30`}>
             <div className="mx-5">
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="flex flex-1 items-center justify-between md:items-stretch">
