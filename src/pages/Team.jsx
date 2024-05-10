@@ -1,11 +1,29 @@
-import { team } from "./../data/team.json";
-import { FaLinkedin, FaFacebook, FaWhatsapp } from "react-icons/fa";
-import avatarImg from "./../assets/avatar.png";
-import Tilt from "react-parallax-tilt";
 import { useSelector } from "react-redux";
+import { FaLinkedin, FaFacebook, FaWhatsapp } from "react-icons/fa";
+import Tilt from "react-parallax-tilt";
+import avatarImg from "./../assets/avatar.png";
+import {team} from "./../data/team.json";
+
+// Import team images dynamically
+import team1 from "./../assets/team/saber-2.jpg";
+import team2 from "./../assets/team/hesham.jpg";
+import team3 from "./../assets/team/ziad.jpg";
+import team4 from "./../assets/team/islam.jpg";
+import team5 from "./../assets/team/team-girl.png";
+import team6 from "./../assets/team/team-girl.png";
 
 const Team = () => {
-    const theme = useSelector(state => state.theme.theme)
+    const theme = useSelector(state => state.theme.theme);
+
+    const idToImageMap = {
+        1: team1,
+        2: team2,
+        3: team3,
+        4: team4,
+        5: team5,
+        6: team6,
+    };
+
     return (
         <div className="bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen py-10 px-4" style={{ background: `radial-gradient(circle,${theme == "dark" ? "#E1752C" : "#E1752C"} 0%,${theme !== "dark" ? "#f3f4f6" : "rgb(31 41 55)"} 30%)` }}>
             <div className="max-w-6xl mx-auto">
@@ -14,7 +32,7 @@ const Team = () => {
                     {team.map(member => (
                         <Tilt key={member.id} glareEnable={true} glareBorderRadius="10px" glareColor="#5d56e000">
                             <div className="bg-white dark:bg-dark rounded-xl shadow-md overflow-hidden group">
-                                <img src={member.image || avatarImg} alt={member.name} className="w-full brightness-50 duration-200 transition group-hover:brightness-100 aspect-square object-cover" />
+                                <img src={idToImageMap[member.id] || avatarImg} alt={member.name} className="w-full brightness-50 duration-200 transition group-hover:brightness-100 aspect-square object-cover" />
                                 <div className="p-4">
                                     <h2 className="text-xl font-semibold mb-2 text-center">{member.name}</h2>
                                     <p className="text-gray-600 mb-4 text-center">{member.role}</p>
