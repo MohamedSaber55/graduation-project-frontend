@@ -87,7 +87,7 @@
         {
             "id": 8,
             "name": "Ahmed Ali",
-            "image": "/src/assets/item.png",
+            "image": "./../../src/assets/item.png",
             "status": "Missed",
             "category": "person",
             "country": "Egypt",
