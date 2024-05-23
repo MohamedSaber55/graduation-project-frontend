@@ -2,7 +2,7 @@
     "team": [
         {
             "id": 1,
-            "name": "Mohamed Saber",
+            "name": "Mohamed Saber Abdeltawab",
             "role": "Front End Developer",
             "email": "mohamed.saber.7753@gmail.com",
             "image": "src/assets/team/saber-2.jpg",
@@ -38,7 +38,7 @@
         },
         {
             "id": 4,
-            "name": "Eslam Nassar",
+            "name": "Eslam Nassar Ramadan",
             "role": "Back End Developer",
             "email": "alice@example.com",
             "image": "src/assets/team/islam.jpg",
@@ -50,7 +50,7 @@
         },
         {
             "id": 5,
-            "name": "Basma Abdelwahab",
+            "name": "Basma Abdelwahab Saleh",
             "role": "UI/UX Designer",
             "email": "basmasaleh584@gmail.com",
             "image": "src/assets/team/team-girl.png",
@@ -62,7 +62,7 @@
         },
         {
             "id": 6,
-            "name": "Asmaa Mohammed Ghanem",
+            "name": "Asmaa Mohamed Ghanem",
             "role": "Machine Learning",
             "email": "asmaamohamedghanem006@gmail.com",
             "image": "src/assets/team/team-girl.png",
