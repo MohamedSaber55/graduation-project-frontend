@@ -4,12 +4,14 @@ import { data } from "./../data/data.json"
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment/moment';
+import Pagination from '../components/Pagination';
 const Posts = () => {
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
     const theme = useSelector((state) => state.theme.theme);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(12);
     useEffect(() => {
         let filtered = data;
         if (searchTerm) {
@@ -19,7 +21,9 @@ const Posts = () => {
             filtered = filtered.filter(post => post.category === selectedCategory.value);
         }
         setFilteredPosts(filtered);
-    }, [searchTerm, selectedCategory]);
+        // Scroll to top when currentPage changes
+        window.scrollTo(0, 0);
+    }, [searchTerm, selectedCategory, currentPage]);
     const customStyles = {
         control: (provided, state) => ({
             ...provided,
@@ -55,6 +59,14 @@ const Posts = () => {
     const handleCategoryChange = selectedOption => {
         setSelectedCategory(selectedOption);
     };
+    // Pagination
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+    const paginate = pageNumber => setCurrentPage(pageNumber);
+    const nextPage = () => setCurrentPage(prevPage => prevPage + 1);
+    const prevPage = () => setCurrentPage(prevPage => prevPage - 1);
 
     return (
         <div className={`bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen transition-colors duration-500`}>
@@ -67,7 +79,7 @@ const Posts = () => {
                             placeholder="Search..."
                             value={searchTerm}
                             onChange={handleSearchChange}
-                            className={` px-2 py-3 sm:w-fit w-full rounded-lg text-sm bg-transparent border border-main`}
+                            className={`px-2 py-3 sm:w-fit w-full rounded-lg text-sm bg-transparent border border-main`}
                         />
                         <Select
                             styles={customStyles}
@@ -83,7 +95,7 @@ const Posts = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white dark:bg-dark p-5 rounded-md">
-                    {filteredPosts.map(post => (
+                    {currentPosts.map(post => (
                         <Link to={`/post/${post?.id}`} key={post?.id} className="post-card bg-light dark:bg-dark-light rounded-md overflow-hidden flex flex-col">
                             <div className="post-image">
                                 <img src={post?.image} alt={post?.name} className="w-full h-full object-cover object-center" />
@@ -112,6 +124,15 @@ const Posts = () => {
                             </div>
                         </Link>
                     ))}
+                </div>
+                <div className="p-4 mt-5 bg-white dark:bg-dark rounded-md">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPageCount={Math.ceil(filteredPosts.length / postsPerPage)}
+                        onPageChange={paginate}
+                        onNextPage={nextPage}
+                        onPrevPage={prevPage}
+                    />
                 </div>
             </div>
         </div>

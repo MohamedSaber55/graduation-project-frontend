@@ -66,7 +66,8 @@ const ForgetPass = () => {
                     }}
                     className="rounded-l-[150px] bg-main hidden md:flex flex-col justify-center items-center text-white gap-5 py-10 px-5">
                     <h2 className="text-4xl lg:text-5xl font-bold m-0 text-center">Forgot Your Password?</h2>
-                    <p className="text-base lg:text-xl my-5 text-center">Enter your email address to receive OTP number</p>
+                    <p className="text-base lg:text-xl my-5 text-center">Fear not we will email you instructions to reset your
+                        password.</p>
                     <Link to="/signin" className="p-2 lg:p-3 border rounded-3xl w-36 lg:w-48 text-center text-sm border-white uppercase  hover:scale-90 duration-300" id="signIn">Sign in</Link>
                 </motion.div>
             </div>
