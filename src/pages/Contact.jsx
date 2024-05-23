@@ -14,10 +14,10 @@ const Contact = () => {
         last_name: string()
             .min(2, 'Last name must be at least 2 characters')
             .required('Last name is required'),
-        email: string()
-            .email('Invalid email address')
-            .matches(/@(gmail|yahoo|outlook)\.com$/, 'Email must be from Gmail or Yahoo or Outlook')
-            .required('Email is required'),
+        // email: string()
+        //     .email('Invalid email address')
+        //     .matches(/@(gmail|yahoo|outlook)\.com$/, 'Email must be from Gmail or Yahoo or Outlook')
+        //     .required('Email is required'),
         phone: string()
             .matches(/^(010|011|012|015)\d{8}$/, 'Phone number must be a valid Egyptian mobile number')
             .required('Phone number is required'),
@@ -30,7 +30,7 @@ const Contact = () => {
         initialValues: {
             first_name: "",
             last_name: "",
-            email: "",
+            // email: "",
             phone: "",
             message: "",
         },
@@ -41,7 +41,7 @@ const Contact = () => {
     });
 
     return (
-        <div className="flex justify-center items-center flex-col min-h-screen bg-white dark:bg-dark-light text-dark dark:text-light">
+        <div className="flex justify-center items-center flex-col min-h-screen bg-light dark:bg-dark-light text-dark dark:text-light">
             <div className="container py-5">
                 <div className="grid grid-cols-2 w-full overflow-hidden gap-5">
                     <motion.form
@@ -49,7 +49,7 @@ const Contact = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
                         onSubmit={contactForm.handleSubmit}
-                        className="col-span-2 lg:col-span-1 flex flex-col justify-center gap-y-3 pt-4"
+                        className="col-span-2 lg:col-span-1 space-y-3 pt-4"
                     >
                         <div className="text-start mb-3">
                             <h2 className="text-4xl  font-bold mb-2">Get in touch</h2>
@@ -105,8 +105,8 @@ const Contact = () => {
                             </div>
                         </div>
 
-                        <div className="email">
-                            <label htmlFor="first_name" className=" font-bold">
+                        {/* <div className="email">
+                            <label htmlFor="email" className=" font-bold">
                                 Email
                             </label>
                             <input
@@ -126,7 +126,7 @@ const Contact = () => {
                             ) : (
                                 ""
                             )}
-                        </div>
+                        </div> */}
                         <div className="phone">
                             <label htmlFor="phone" className=" font-bold">
                                 phone
@@ -158,7 +158,7 @@ const Contact = () => {
                                 value={contactForm.values.message}
                                 onChange={contactForm.handleChange}
                                 cols="10"
-                                rows="4"
+                                rows="7"
                                 name="message"
                                 type="text"
                                 id="message"
@@ -223,7 +223,7 @@ const Contact = () => {
                         }}
                         className="col-span-1 hidden lg:block gap-5 text-white p-5"
                     >
-                        <img src={contactPhoto} className=" w-full rounded-md" alt="" />
+                        <img src={contactPhoto} className=" w-full aspect-square rounded-md" alt="" />
                     </motion.div>
                 </div>
             </div>
