@@ -30,7 +30,7 @@ const About = () => {
                         transition={{ delay: 0.2, duration: 0.5 }}
                         className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-white dark:bg-dark rounded-xl shadow-md p-4"
                     >
-                        <img src={foundObjectImage} alt="Missing person" className="w-full aspect-video object-cover rounded-md" />
+                        <img src={foundObjectImage} alt="Missing Items" className="w-full aspect-video object-cover rounded-md" />
                         <div className="pt-1">
                             <p className="text-base md:text-lg px-5 leading-loose mb-4">
                                 By utilizing this service, users can proactively search for their loved ones by entering all available information, accompanied by a photograph. Our application leverages a machine learning model for person identification or object recognition, assisting in locating them.
@@ -46,7 +46,7 @@ const About = () => {
                         transition={{ delay: 0.2, duration: 0.5 }}
                         className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-white dark:bg-dark rounded-xl shadow-md p-4"
                     >
-                        <img src={img} alt="Missing person" className="w-full aspect-video object-cover rounded-md" />
+                        <img src={img} alt="More" className="w-full aspect-[16/10] object-cover rounded-md" />
                         <div className="pt-1 text-base md:text-lg px-5 leading-loose">
                             <p className="mb-4">
                                 Furthermore, our application offers a straightforward process for users who have found any lost person or object. By simply uploading an image of the found person or object along with their current location, our app manages the subsequent steps to connect users with each other. However, our platform's capabilities extend beyond this fundamental function.

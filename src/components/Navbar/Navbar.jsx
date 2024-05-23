@@ -77,7 +77,7 @@ const Navbar = () => {
                 <div className="flex md:hidden gap-4 items-center px-5 pb-5">
                     <Link to={'/signin'} className="hover:bg-main text-sm border border-main py-2 px-4 hover:text-white rounded-2xl duration-150">Sign In</Link>
                     <Link to={'/signup'} className="bg-main text-sm py-2 px-4 text-white hover:bg-transparent border border-main rounded-2xl duration-150">Sign Up</Link>
-                    <Link to={'/post/add'} className="bg-main text-sm py-2 px-4 text-white dark:hover:text-light hover:text-dark hover:bg-transparent border border-main rounded-2xl duration-150">Add Post</Link>
+                    <Link onClick={() => setNavOpen(!navOpen)} to={'/post/add'} className="bg-main text-sm py-2 px-4 text-white dark:hover:text-light hover:text-dark hover:bg-transparent border border-main rounded-2xl duration-150">Add Post</Link>
                 </div>
             </div>
         </nav>
