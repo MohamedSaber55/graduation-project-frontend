@@ -3,6 +3,8 @@ import { data } from "./../data/data.json"
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import Comments from "../components/Comments";
 import AddComment from "../components/AddComment";
+import postImage from "./../assets/item.png"
+
 const Post = () => {
     const { postId } = useParams()
     const navigate = useNavigate();
@@ -19,7 +21,7 @@ const Post = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                     <div className="item bg-white dark:bg-dark space-y-4 text-center p-4 rounded-lg">
                         <div className="image rounded-lg overflow-hidden flex justify-center">
-                            <img src={post.image} alt={post.name} className="max-h-80 object-contain  w-full rounded-lg" />
+                            <img src={postImage || post.image} alt={post.name} className="max-h-80 object-contain  w-full rounded-lg" />
                         </div>
                         <h2 className="text-2xl font-semibold">{post.name}</h2>
                     </div>

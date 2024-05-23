@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment/moment';
 import Pagination from '../components/Pagination';
+import postImage from "./../assets/item.png"
 const Posts = () => {
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -98,7 +99,7 @@ const Posts = () => {
                     {currentPosts.map(post => (
                         <Link to={`/post/${post?.id}`} key={post?.id} className="post-card bg-light dark:bg-dark-light rounded-md overflow-hidden flex flex-col">
                             <div className="post-image">
-                                <img src={post?.image} alt={post?.name} className="w-full h-full object-cover object-center" />
+                                <img src={postImage || post?.image} alt={post?.name} className="w-full h-full object-cover object-center" />
                             </div>
                             <div className="post-details p-4">
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{post?.name}</h2>
