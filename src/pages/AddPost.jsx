@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { mixed, object, string } from "yup";
 import { useSelector } from "react-redux";
 import Select from "react-select"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const AddPost = () => {
     const navigate = useNavigate();
     const [imagePreview, setImagePreview] = useState(null);
@@ -133,23 +135,23 @@ const AddPost = () => {
                 </div>
                 <div className="flex justify-center mb-5">
                     <button
-                        className={`px-4 py-2 rounded-l-lg ${postType === "item" ? "bg-main text-white" : "bg-white dark:bg-dark text-main border border-main"}`}
-                        onClick={() => setPostType("item")}
-                    >
-                        Item
-                    </button>
-                    <button
-                        className={`px-4 py-2 rounded-r-lg ${postType === "person" ? "bg-main text-white" : "bg-white dark:bg-dark text-main border border-main"}`}
+                        className={`px-4 py-2 rounded-l-lg ${postType === "person" ? "bg-main text-white" : "bg-white dark:bg-dark text-main border border-main"}`}
                         onClick={() => setPostType("person")}
                     >
                         Person
+                    </button>
+                    <button
+                        className={`px-4 py-2 rounded-r-lg ${postType === "item" ? "bg-main text-white" : "bg-white dark:bg-dark text-main border border-main"}`}
+                        onClick={() => setPostType("item")}
+                    >
+                        Item
                     </button>
                 </div>
                 <form onSubmit={addPostFormik.handleSubmit}>
                     <div className="image">
                         <div className="item space-y-2">
                             <div className="uploadImage mb-4" onDragOver={handleDragOver} onDrop={handleDrop}>
-                                <label htmlFor="fileInput" className="cursor-pointer block w-full h-64 border border rounded-md overflow-hidden bg-white dark:bg-dark border-main">
+                                <label htmlFor="fileInput" className="cursor-pointer block w-full h-64 border rounded-md overflow-hidden bg-white dark:bg-dark border-main">
                                     {imagePreview ? (
                                         <div className="text-gray-600 flex items-center justify-center h-64 text-center">
                                             <img
@@ -208,21 +210,23 @@ const AddPost = () => {
                                     </div>
                                 </div>
                                 <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="item space-y-3">
-                                        <label htmlFor="date" className="text-main text-lg font-semibold">Date:</label>
-                                        <input
-                                            type="date"
-                                            name="date"
-                                            id="date"
-                                            className="p-3 rounded-lg border border-main w-full bg-transparent block"
-                                            onChange={addPostFormik.handleChange}
-                                            value={addPostFormik.values.date}
+                                    <div className="item space-y-3 ">
+                                        <label htmlFor="date" className="text-main text-lg font-semibold block">Date:</label>
+                                        <DatePicker
+                                            selected={addPostFormik.values.date}
+                                            onChange={date => addPostFormik.setFieldValue('date', date)}
+                                            dateFormat="yyyy-MM-dd"
+                                            placeholderText="Date"
+                                            isClearable
+                                            className="p-3 rounded-lg border border-main bg-transparent block w-full"
                                         />
                                     </div>
                                     <div className="item space-y-3">
                                         <label htmlFor="age" className="text-main text-lg font-semibold">Age:</label>
                                         <input
-                                            type="text"
+                                            type="number"
+                                            min={0}
+                                            max={150}
                                             name="age"
                                             id="age"
                                             className="p-3 rounded-lg border border-main w-full bg-transparent block"
@@ -233,15 +237,15 @@ const AddPost = () => {
                                     </div>
                                 </div>
                                 <div className="grid md:grid-cols-2 gap-8">
-                                <div className="item space-y-3">
-                            <label htmlFor="status" className="text-main text-lg font-semibold">Status:</label>
-                            <Select
-                                styles={customStyles}
-                                options={statusOptions}
-                                placeholder="Select Status"
-                                onChange={(option) => addPostFormik.setFieldValue('status', option.value)}
-                            />
-                        </div>
+                                    <div className="item space-y-3">
+                                        <label htmlFor="status" className="text-main text-lg font-semibold">Status:</label>
+                                        <Select
+                                            styles={customStyles}
+                                            options={statusOptions}
+                                            placeholder="Select Status"
+                                            onChange={(option) => addPostFormik.setFieldValue('status', option.value)}
+                                        />
+                                    </div>
                                 </div>
                             </>
                         ) : (
@@ -275,25 +279,22 @@ const AddPost = () => {
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <div className="item space-y-3">
                                         <label htmlFor="status" className="text-main text-lg font-semibold">Status:</label>
-                                        <input
-                                            type="text"
-                                            name="status"
-                                            id="status"
-                                            className="p-3 rounded-lg border border-main w-full bg-transparent block"
-                                            placeholder="Status"
-                                            onChange={addPostFormik.handleChange}
-                                            value={addPostFormik.values.status}
+                                        <Select
+                                            styles={customStyles}
+                                            options={statusOptions}
+                                            placeholder="Select Status"
+                                            onChange={(option) => addPostFormik.setFieldValue('status', option.value)}
                                         />
                                     </div>
-                                    <div className="item space-y-3">
-                                        <label htmlFor="date" className="text-main text-lg font-semibold">Date:</label>
-                                        <input
-                                            type="date"
-                                            name="date"
-                                            id="date"
-                                            className="p-3 rounded-lg border border-main w-full bg-transparent block"
-                                            onChange={addPostFormik.handleChange}
-                                            value={addPostFormik.values.date}
+                                    <div className="item space-y-3 ">
+                                        <label htmlFor="date" className="text-main text-lg font-semibold block">Date:</label>
+                                        <DatePicker
+                                            selected={addPostFormik.values.date}
+                                            onChange={date => addPostFormik.setFieldValue('date', date)}
+                                            dateFormat="yyyy-MM-dd"
+                                            placeholderText="Date"
+                                            isClearable
+                                            className="p-3 rounded-lg border border-main bg-transparent block w-full"
                                         />
                                     </div>
                                 </div>

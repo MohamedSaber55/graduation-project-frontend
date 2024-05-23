@@ -98,7 +98,11 @@ const Home = () => {
                                 },
                                 576: {
                                     // width: 576,
-                                    slidesPerView: 3,
+                                    slidesPerView: 1,
+                                },
+                                640: {
+                                    // width: 576,
+                                    slidesPerView: 2,
                                 },
                                 768: {
                                     // width: 768,
@@ -166,7 +170,11 @@ const Home = () => {
                                 },
                                 576: {
                                     // width: 576,
-                                    slidesPerView: 3,
+                                    slidesPerView: 1,
+                                },
+                                640: {
+                                    // width: 576,
+                                    slidesPerView: 2,
                                 },
                                 768: {
                                     // width: 768,

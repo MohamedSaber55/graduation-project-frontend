@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { BsEye, BsEyeSlash } from 'react-icons/bs'
 import { Link, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { object, string } from 'yup'
+import { object, ref, string } from 'yup'
 import { useFormik } from 'formik'
 // import { Register } from '../../Redux/slices/authSlice'
 import { TbLoader } from 'react-icons/tb'
@@ -14,8 +14,19 @@ const Register = () => {
     const state = useSelector(state => state.user)
 
     const validationSchema = object({
-        email: string().email().required(),
-        password: string().matches(/^(?=.*[A-Za-z])(?=.*\d)*([@$!%*#?&])*[A-Za-z\d@$!%*#?&.]{6,32}$/, "password have to be 6 : 32 character and can contain special characters").required(),
+        first_name: string()
+            .required('First name is required'),
+        last_name: string()
+            .required('Last name is required'),
+        email: string()
+            .email('Invalid email address')
+            .required('Email is required'),
+        password: string()
+            .matches(/^(?=.*[A-Za-z])(?=.*\d)*([@$!%*#?&])*[A-Za-z\d@$!%*#?&.]{6,32}$/, 'Password must be 6 to 32 characters long and can contain special characters')
+            .required('Password is required'),
+        cPass: string()
+            .oneOf([ref('password'), null], 'Passwords must match')
+            .required('Confirm Password is required'),
     });
 
     const registerFormik = useFormik({
@@ -23,17 +34,17 @@ const Register = () => {
             first_name: "",
             last_name: "",
             email: "",
-            phone: "",
-            country: "",
-            city: "",
-            gender: "",
+            // phone: "",
+            // country: "",
+            // city: "",
+            // gender: "",
             password: "",
             cPass: "",
         },
         validationSchema,
         onSubmit: async (values) => {
+            console.log(values);
             // dispatch(Register(values))
-            // dispatch(getAllPosts())
         }
     })
 
@@ -46,7 +57,7 @@ const Register = () => {
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
-                    onSubmit={registerFormik.handleSubmit} className="col-span-2 sm:col-span-1 flex flex-col justify-center gap-y-5 gap-4 px-5 w-11/12 m-auto">
+                    onSubmit={registerFormik.handleSubmit} className="col-span-2 md:col-span-1 flex flex-col justify-center gap-y-5 gap-4 px-5 w-11/12 m-auto">
                     <div className="text-center mb-5">
                         <h1 className="text-3xl text-main font-bold mb-2">Create Your Account</h1>
                         <p className='text-sm text-gray-600 dark:text-gray-400'>Please, Enter your personal details blow.</p>
@@ -74,7 +85,7 @@ const Register = () => {
                         </div>
                     </div>
                     <p className='font-medium text-base pt-4' >Enter your email & phone</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-1 gap-5">
                         <div className="email">
                             <input onBlur={registerFormik.handleBlur}
                                 value={registerFormik.values.email}
@@ -84,7 +95,7 @@ const Register = () => {
                                 : ""
                             }
                         </div>
-                        <div className="phone">
+                        {/* <div className="phone">
                             <input onBlur={registerFormik.handleBlur}
                                 value={registerFormik.values.phone}
                                 onChange={registerFormik.handleChange} name='phone' type="text" id='phone' className="w-full py-3  border-b border-black  dark:border-light outline-none bg-transparent" placeholder="Phone" />
@@ -92,9 +103,9 @@ const Register = () => {
                                 <div className=" py-1 text-warning">{registerFormik.errors.phone}</div>
                                 : ""
                             }
-                        </div>
+                        </div> */}
                     </div>
-                    <p className='font-medium text-base pt-4' >Enter your address</p>
+                    {/* <p className='font-medium text-base pt-4' >Enter your address</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="country">
                             <input onBlur={registerFormik.handleBlur}
@@ -114,9 +125,9 @@ const Register = () => {
                                 : ""
                             }
                         </div>
-                    </div>
+                    </div> */}
                     <p className='font-medium text-base pt-4' >Enter your Password</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-1 gap-5">
                         <div className="pass">
                             <div className="w-full relative ">
                                 <input onBlur={registerFormik.handleBlur}
@@ -131,14 +142,14 @@ const Register = () => {
                             <div className="w-full relative ">
                                 <input onBlur={registerFormik.handleBlur}
                                     value={registerFormik.values.cPass}
-                                    onChange={registerFormik.handleChange} id='cPass' name='cPass' type={passType ? "password" : "text"} className="w-full py-3  border-b border-black  dark:border-light outline-none bg-transparent" placeholder="Enter your cPass" />
+                                    onChange={registerFormik.handleChange} id='cPass' name='cPass' type={passType ? "password" : "text"} className="w-full py-3  border-b border-black  dark:border-light outline-none bg-transparent" placeholder="Confirm password" />
                                 <button type='button' className='absolute right-2 top-1/2 -translate-y-1/2 hover:text-main' onClick={() => setPassType(!passType)}>{!passType ? <BsEyeSlash /> : <BsEye />}</button>
                             </div>
                             {registerFormik.errors.cPass && registerFormik.touched.cPass ?
                                 <div className=" py-1 text-warning">{registerFormik.errors.cPass}</div> : ""}
                         </div>
                     </div>
-                    <div className="gender w-full flex gap-4 my-4 items-center">
+                    {/* <div className="gender w-full flex gap-4 my-4 items-center">
                         <p className='font-medium text-base mr-6'>Select your gender</p>
                         <div className="col-span-1 flex gap-2">
                             <input name="gender" value="male" onChange={registerFormik.handleChange} type="radio" id="male-input" className="select-none" />
@@ -152,8 +163,11 @@ const Register = () => {
                             <div className=" py-1 text-warning">{registerFormik.errors.gender}</div>
                             : ""
                         }
-                    </div>
+                    </div> */}
                     <button disabled={registerFormik.isValid && registerFormik.dirty && !state.loading ? false : true} type='submit' className={`p-3 w-56 m-auto text-sm bg-gradient-to-l to-second from-main hover:from-transparent  text-white rounded-3xl border border-main uppercase font-medium hover:text-main duration-150 flex justify-center`}>{state.loading ? <><TbLoader className="animate-spin mx-1" size={18} /> Loading...</> : "Sign Up"}</button>
+                    <div className='text-center'>
+                        <p>Already have an account? <Link className='text-main' to={"/signin"}>Sign in</Link></p>
+                    </div>
                 </motion.form>
                 <motion.div
                     initial={{

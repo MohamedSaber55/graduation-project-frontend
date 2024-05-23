@@ -19,7 +19,7 @@ const Post = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                     <div className="item bg-white dark:bg-dark space-y-4 text-center p-4 rounded-lg">
                         <div className="image rounded-lg overflow-hidden flex justify-center">
-                            <img src={post.image} alt={post.name} className="max-h-60 rounded-lg" />
+                            <img src={post.image} alt={post.name} className="max-h-80 object-contain  w-full rounded-lg" />
                         </div>
                         <h2 className="text-2xl font-semibold">{post.name}</h2>
                     </div>

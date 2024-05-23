@@ -31,3 +31,9 @@ input,
 textarea {
     outline: 0;
 }
+.react-datepicker-wrapper{
+    width: 100% !important;
+}
+.react-datepicker__input-container{
+    width: 100% !important;
+}
