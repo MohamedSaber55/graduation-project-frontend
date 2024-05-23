@@ -59,7 +59,7 @@ const Posts = () => {
     return (
         <div className={`bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen transition-colors duration-500`}>
             <div className="container mx-auto p-4">
-                <div className="flex items-center gap-5 flex-wrap justify-between mb-4 dark:bg-dark p-4 rounded-md">
+                <div className="flex items-center gap-5 flex-wrap justify-between mb-4 bg-white dark:bg-dark p-4 rounded-md">
                     <h1 className="text-3xl font-semibold">Posts</h1>
                     <div className="flex flex-wrap justify-between gap-4 w-full sm:w-fit">
                         <input
@@ -82,7 +82,7 @@ const Posts = () => {
                         />
                     </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 dark:bg-dark p-5 rounded-md">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white dark:bg-dark p-5 rounded-md">
                     {filteredPosts.map(post => (
                         <Link to={`/post/${post?.id}`} key={post?.id} className="post-card bg-light dark:bg-dark-light rounded-md overflow-hidden flex flex-col">
                             <div className="post-image">
