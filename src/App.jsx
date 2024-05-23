@@ -27,11 +27,11 @@ function App() {
         { path: "/post/:postId", element: <Post /> },
         { path: "/post/add", element: <AddPost /> },
         { path: "/team", element: <Team /> },
-        { path: "/forgetpass", element: <ForgetPass /> },
-        { path: "/resetpass", element: <ResetPass /> },
         { path: "*", element: <NotFound /> }
       ]
     },
+    { path: "/resetpass", element: <ResetPass /> },
+    { path: "/forgetpass", element: <ForgetPass /> },
     { path: "/welcome", element: <Welcome /> },
     { path: "/signin", element: <Login /> },
     { path: "/signup", element: <Register /> },]

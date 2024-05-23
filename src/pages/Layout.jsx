@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom"
 import Navbar from "../components/Navbar/Navbar"
-// import Footer from "../components/Footer"
+import Footer from "../components/Footer"
 import ScrollToTop from "../components/ToTop"
 
 const Layout = () => {
@@ -11,7 +11,7 @@ const Layout = () => {
             <div className="min-h-screen pt-16">
                 <Outlet></Outlet>
             </div>
-            {/* <Footer /> */}
+            <Footer />
         </div>
     )
 }

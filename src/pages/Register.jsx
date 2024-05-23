@@ -46,7 +46,7 @@ const Register = () => {
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
-                    onSubmit={registerFormik.handleSubmit} className="col-span-2 lg:col-span-1 flex flex-col justify-center gap-y-4 p-10 w-full m-auto ">
+                    onSubmit={registerFormik.handleSubmit} className="col-span-2 sm:col-span-1 flex flex-col justify-center gap-y-5 gap-4 px-5 w-11/12 m-auto">
                     <div className="text-center mb-5">
                         <h1 className="text-3xl text-main font-bold mb-2">Create Your Account</h1>
                         <p className='text-sm text-gray-600 dark:text-gray-400'>Please, Enter your personal details blow.</p>
