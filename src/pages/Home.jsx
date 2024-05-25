@@ -214,7 +214,7 @@ const Home = () => {
                                 <SwiperSlide key={i}>
                                     <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
                                         <div className="img-box">
-                                            <img src={objectImage || item.image} className="w-full" />
+                                            <img src={"http://localhost:5097/Resources/" + item.image} className="w-full" />
                                         </div>
                                         <div className="item-body flex flex-col gap-1 p-3">
                                             <span className="text-lg text-warning font-semibold">{item.status == 0 ? "Missed" : "Founded"}</span>
