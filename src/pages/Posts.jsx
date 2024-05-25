@@ -85,7 +85,6 @@ const Posts = () => {
                         <Select
                             styles={customStyles}
                             options={[
-                                { value: '', label: 'All Categories' },
                                 { value: 'person', label: 'Person' },
                                 { value: 'item', label: 'Item' }
                             ]}

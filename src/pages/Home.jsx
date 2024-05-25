@@ -89,7 +89,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="container bg-white dark:bg-dark p-6 rounded-xl shadow-lg my-5">
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-semibold my-5 text-center">Lost People</h3>
+                    <h3 className="text-3xl md:text-4xl font-semibold my-5 text-center">People</h3>
                     <div className="py-5">
                         <Swiper
                             modules={[FreeMode]}
@@ -161,7 +161,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="container bg-white dark:bg-dark p-6 rounded-xl shadow-lg my-5">
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-semibold my-5 text-center">Lost Objects</h3>
+                    <h3 className="text-3xl md:text-4xl font-semibold my-5 text-center">Objects</h3>
                     <div className="py-5">
                         <Swiper
                             modules={[FreeMode]}

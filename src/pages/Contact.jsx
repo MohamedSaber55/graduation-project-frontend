@@ -1,12 +1,13 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { object, string } from "yup";
 import { useFormik } from "formik";
 import { TbLoader } from "react-icons/tb";
 import { motion } from "framer-motion";
 import contactPhoto from "./../assets/contact.jpg";
+import { addComplaint } from "../store/slices/complianSlice";
 const Contact = () => {
-    const state = useSelector((state) => state.user);
-
+    const state = useSelector((state) => state.complain);
+    const dispatch = useDispatch()
     const validationSchema = object({
         first_name: string()
             .min(2, 'First name must be at least 2 characters')
@@ -37,6 +38,7 @@ const Contact = () => {
         validationSchema,
         onSubmit: async (values) => {
             console.log(values);
+            dispatch(addComplaint(values))
         },
     });
 
