@@ -1,37 +1,42 @@
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { object, ref, string } from 'yup';
 import { useFormik } from 'formik';
 import { TbLoader } from 'react-icons/tb';
 import { motion } from 'framer-motion';
-// import { resetPassword } from '../store/slices/authSlice';
+import { resetPassword } from '../store/slices/authSlice';
+import { useState } from 'react';
+import { BsEye, BsEyeSlash } from 'react-icons/bs'
 
 const ResetPassword = () => {
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const state = useSelector(state => state.user);
+    console.log(state);
+    const [passType, setPassType] = useState(true)
 
     const validationSchema = object({
-        otp: string().required('OTP is required'),
-        newPassword: string().min(6, 'Password must be at least 6 characters').required('New Password is required'),
+        password: string().min(6, 'Password must be at least 6 characters').required('New Password is required'),
         confirmPassword: string()
-            .oneOf([ref('newPassword'), null], 'Passwords must match')
+            .oneOf([ref('password'), null], 'Passwords must match')
             .required('Confirm Password is required'),
         email: string().email().required('Email is required'),
     });
 
     const resetPasswordFormik = useFormik({
         initialValues: {
-            otp: "",
-            newPassword: "",
+            password: "",
             confirmPassword: "",
             email: "",
         },
         validationSchema,
         onSubmit: async (values) => {
             console.log(values);
-            // dispatch(resetPassword(values));
+            dispatch(resetPassword(values));
         }
     });
+    if (state.message == "Password reset successfully.") {
+        return <Navigate to={"/signin"} replace={true} />
+    }
 
     return (
         <div className='flex justify-center items-center flex-col h-screen overflow-y-auto'>
@@ -43,39 +48,6 @@ const ResetPassword = () => {
                     onSubmit={resetPasswordFormik.handleSubmit} className="flex flex-col justify-center gap-y-8 gap-4 px-5 w-11/12 m-auto">
                     <h1 className="text-4xl text-main font-bold mb-5 text-center">Reset Password</h1>
                     <div className="item space-y-1">
-                        <label htmlFor="otp" className='text-lg font-medium'>OTP</label>
-                        <input onBlur={resetPasswordFormik.handleBlur}
-                            value={resetPasswordFormik.values.otp}
-                            onChange={resetPasswordFormik.handleChange} name='otp' type="text" id='otp'
-                            className="py-3 block w-full border-b border-black dark:border-light outline-none bg-transparent" placeholder="Enter OTP" />
-                        {resetPasswordFormik.errors.otp && resetPasswordFormik.touched.otp ?
-                            <div className=" py-1 text-warning">{resetPasswordFormik.errors.otp}</div>
-                            : ""
-                        }
-                    </div>
-                    <div className="grid lg:grid-cols-2 gap-4">
-                        <div className="item space-y-1">
-                            <label htmlFor="newPassword" className='text-lg font-medium'>New Password</label>
-                            <input onBlur={resetPasswordFormik.handleBlur}
-                                value={resetPasswordFormik.values.newPassword}
-                                onChange={resetPasswordFormik.handleChange} name='newPassword' type="password" id='newPassword' className="py-3 w-full block border-b border-black dark:border-light outline-none bg-transparent" placeholder="Enter New Password" />
-                            {resetPasswordFormik.errors.newPassword && resetPasswordFormik.touched.newPassword ?
-                                <div className=" py-1 text-warning">{resetPasswordFormik.errors.newPassword}</div>
-                                : ""
-                            }
-                        </div>
-                        <div className="item space-y-1">
-                            <label htmlFor="confirmPassword" className='text-lg font-medium'>Confirm Password</label>
-                            <input onBlur={resetPasswordFormik.handleBlur}
-                                value={resetPasswordFormik.values.confirmPassword}
-                                onChange={resetPasswordFormik.handleChange} name='confirmPassword' type="password" id='confirmPassword' className="py-3 w-full block border-b border-black dark:border-light outline-none bg-transparent" placeholder="Confirm New Password" />
-                            {resetPasswordFormik.errors.confirmPassword && resetPasswordFormik.touched.confirmPassword ?
-                                <div className=" py-1 text-warning">{resetPasswordFormik.errors.confirmPassword}</div>
-                                : ""
-                            }
-                        </div>
-                    </div>
-                    <div className="item space-y-1">
                         <label htmlFor="email" className='text-lg font-medium'>Email</label>
                         <input onBlur={resetPasswordFormik.handleBlur}
                             value={resetPasswordFormik.values.email}
@@ -85,9 +57,33 @@ const ResetPassword = () => {
                             : ""
                         }
                     </div>
+                    <div className="grid lg:grid-cols-1 gap-4">
+                        <div className="item space-y-1">
+                            <label htmlFor="password" className='text-xl font-medium mt-5'>Password</label>
+                            <div className="w-full relative ">
+                                <input onBlur={resetPasswordFormik.handleBlur}
+                                    value={resetPasswordFormik.values.password}
+                                    onChange={resetPasswordFormik.handleChange} id='password' name='password' type={passType ? "password" : "text"} className="w-full py-3  border-b border-black dark:border-light outline-none bg-transparent" placeholder="Enter your password" />
+                                <button type='button' className='absolute right-2 top-1/2 -translate-y-1/2 hover:text-main' onClick={() => setPassType(!passType)}>{!passType ? <BsEyeSlash /> : <BsEye />}</button>
+                            </div>
+                            {resetPasswordFormik.errors.password && resetPasswordFormik.touched.password ?
+                                <div className=" py-1 text-warning">{resetPasswordFormik.errors.password}</div> : ""}
+                        </div>
+                        <div className="item space-y-1">
+                            <label htmlFor="confirmPassword" className='text-xl font-medium mt-5'>confirmPassword</label>
+                            <div className="w-full relative ">
+                                <input onBlur={resetPasswordFormik.handleBlur}
+                                    value={resetPasswordFormik.values.confirmPassword}
+                                    onChange={resetPasswordFormik.handleChange} id='confirmPassword' name='confirmPassword' type={passType ? "password" : "text"} className="w-full py-3  border-b border-black dark:border-light outline-none bg-transparent" placeholder="Confirm password" />
+                                <button type='button' className='absolute right-2 top-1/2 -translate-y-1/2 hover:text-main' onClick={() => setPassType(!passType)}>{!passType ? <BsEyeSlash /> : <BsEye />}</button>
+                            </div>
+                            {resetPasswordFormik.errors.confirmPassword && resetPasswordFormik.touched.confirmPassword ?
+                                <div className=" py-1 text-warning">{resetPasswordFormik.errors.confirmPassword}</div> : ""}
+                        </div>
+                    </div>
                     <button disabled={resetPasswordFormik.isValid && resetPasswordFormik.dirty && !state.loading ? false : true} type='submit' className={`p-3 w-56 m-auto text-sm bg-gradient-to-l to-second from-main hover:from-transparent  text-white rounded-3xl border border-main uppercase font-medium hover:text-main duration-150 flex justify-center`}>{state.loading ? <><TbLoader className="animate-spin mx-1" size={18} /> Loading...</> : "Reset Password"}</button>
                     {state.error && <div className='text-warning p-2'>{state.error.message}</div>}
-                    {state.success && <div className='text-success p-2'>{state.success.message}</div>}
+                    {/* {state.success && <div className='text-success p-2'>{state.success.message}</div>} */}
                 </motion.form>
                 <motion.div
                     initial={{ x: 500, opacity: 0 }}

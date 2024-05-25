@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useState } from 'react'
 import { BsEye, BsEyeSlash } from 'react-icons/bs'
 import { Link, Navigate } from 'react-router-dom'
@@ -12,7 +13,6 @@ const Login = () => {
     const [passType, setPassType] = useState(true)
     const dispatch = useDispatch()
     const state = useSelector(state => state.user)
-
     const validationSchema = object({
         email: string().email().required(),
         password: string().matches(/^(?=.*[A-Za-z])(?=.*\d)*([@$!%*#?&])*[A-Za-z\d@$!%*#?&.]{6,32}$/, "password have to be 6 : 32 character and can contain special characters").required(),
@@ -40,7 +40,6 @@ const Login = () => {
                     transition={{ duration: 0.5 }}
                     onSubmit={loginFormik.handleSubmit} className=" col-span-2 md:col-span-1 flex flex-col justify-center gap-y-5 gap-4 px-5 w-11/12 m-auto">
                     <h1 className="text-4xl text-main font-bold mb-5 text-center">Login</h1>
-                    {/* {state.loginError && <div className='text-warning p-2'>{state.loginError}</div>} */}
                     <label htmlFor="email" className='text-xl font-medium'>Email</label>
                     <input onBlur={loginFormik.handleBlur}
                         value={loginFormik.values.email}
@@ -60,10 +59,10 @@ const Login = () => {
                         <div className=" py-1 text-warning">{loginFormik.errors.password}</div> : ""}
                     <Link to="/forgetpass" className="text-main text-sm mb-4 hover:text-dark dark:hover:text-light text-right">Forgot your password?</Link>
                     <button disabled={loginFormik.isValid && loginFormik.dirty && !state.loading ? false : true} type='submit' className={`p-3 w-56 m-auto text-sm bg-gradient-to-l to-second from-main hover:from-transparent  text-white rounded-3xl border border-main uppercase font-medium hover:text-main duration-150 flex justify-center`}>{state.loading ? <><TbLoader className="animate-spin mx-1" size={18} /> Loading...</> : "Login"}</button>
+                    {state.error && <div className='text-warning p-2 text-center text-sm'>{state.error}</div>}
                     <div className='text-center'>
                         <p>Don't have an account yet? <Link className='text-main' to={"/signup"}>sign up!</Link></p>
                     </div>
-                    {state.error && <div className='text-warning p-2'>{state.error.message}</div>}
                 </motion.form>
                 <motion.div
                     initial={{

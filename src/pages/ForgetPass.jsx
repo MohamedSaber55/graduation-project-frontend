@@ -1,16 +1,16 @@
 // import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { object, string } from 'yup';
 import { useFormik } from 'formik';
 import { TbLoader } from 'react-icons/tb';
 import { motion } from 'framer-motion';
-// import { sendResetPasswordEmail } from '../store/slices/authSlice';
+import { forgetPassword } from '../store/slices/authSlice';
 
 const ForgetPass = () => {
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const state = useSelector(state => state.user);
-
+    console.log(state);
     const validationSchema = object({
         email: string().email().required('Email is required'),
     });
@@ -21,10 +21,13 @@ const ForgetPass = () => {
         },
         validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
-            // dispatch(sendResetPasswordEmail(values.email));
+            dispatch(forgetPassword(values));
         }
     });
+
+    if (state.message == "Password reset email sent successfully.") {
+        return <Navigate to={"/verifyOTP"} replace={true} />
+    }
 
     return (
         <div className='flex justify-center items-center flex-col h-screen'>
@@ -47,7 +50,6 @@ const ForgetPass = () => {
                     </div>
                     <button disabled={forgetPasswordFormik.isValid && forgetPasswordFormik.dirty && !state.loading ? false : true} type='submit' className={`p-3 w-56 m-auto text-sm bg-gradient-to-l to-second from-main hover:from-transparent  text-white rounded-3xl border border-main uppercase font-medium hover:text-main duration-150 flex justify-center`}>{state.loading ? <><TbLoader className="animate-spin mx-1" size={18} /> Loading...</> : "Send Reset Email"}</button>
                     {state.error && <div className='text-warning p-2'>{state.error.message}</div>}
-                    {state.success && <div className='text-success p-2'>{state.success.message}</div>}
                 </motion.form>
                 <motion.div
                     initial={{

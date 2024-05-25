@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 
 const Welcome = () => {
     return (
-        <section>
+        <section className="bg-light dark:bg-dark-light text-dark dark:text-light">
             <div className="h-screen flex flex-col justify-center items-center gap-10 w-4/5 m-auto text-center">
                 <motion.h1
                     initial={{ opacity: 0, scale: 0.5 }}
