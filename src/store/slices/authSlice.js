@@ -7,13 +7,11 @@ const notify = (msg, type) => toast[type](msg);
 export const register = createAsyncThunk("auth/register", async (body) => {
     try {
         const { data } = await axios.post(`${baseUrl}/Account/Register`, body);
-        console.log(data);
         if (data == "Email verification has been sent to your email successfully. Please verify it!") {
             notify('Now, Check your Email', 'success')
         }
         return data;
     } catch (error) {
-        console.log(error.response.data);
         return error.response.data;
         // return rejectWithValue(error.response.data);
     }
@@ -37,13 +35,11 @@ export const forgetPassword = createAsyncThunk("auth/forgetPassword", async (bod
         const { data } = await axios.post(`${baseUrl}/Account/forgetPassword`, null, {
             headers: body
         });
-        console.log(data);
         if (data == "Password reset email sent successfully.") {
             notify("OTP sent to your email", "success")
         }
         return data;
     } catch (error) {
-        console.log(error.response.data);
         return rejectWithValue(error.response.data);
     }
 });
@@ -57,7 +53,6 @@ export const verifyOTP = createAsyncThunk("auth/verifyOTP", async (body, { rejec
 
         return data;
     } catch (error) {
-        console.log(error);
         if (error.response.data == "Invalid OTP.") {
             notify("Invalid OTP", "error")
         }
@@ -71,10 +66,8 @@ export const verifyOTP = createAsyncThunk("auth/verifyOTP", async (body, { rejec
 export const resetPassword = createAsyncThunk("auth/resetPassword", async (body, { rejectWithValue }) => {
     try {
         const { data } = await axios.put(`${baseUrl}/Account/resetPassword`, body);
-        console.log(data);
         return data;
     } catch (error) {
-        console.log(error.response.data);
         return rejectWithValue(error.response.data);
     }
 });
@@ -112,7 +105,6 @@ const authSlice = createSlice({
                 if (action.payload?.errors?.length > 0) {
                     state.error = action.payload.errors
                 }
-                console.log(action.payload);
                 if (action.payload == "User with this email already exists.") {
                     state.error = action.payload
                 }
@@ -135,7 +127,6 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(login.fulfilled, (state, action) => {
-                console.log(action);
                 if (action.payload == "Incorrect email or password.") {
                     state.error = action.payload
                 }

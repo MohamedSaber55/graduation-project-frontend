@@ -9,10 +9,22 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import objectImage from "./../assets/item.png"
 import Select from "react-select"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getAllItems } from "../store/slices/itemSlice";
+import { getAllPersons } from "../store/slices/personsSlice";
 const Home = () => {
     const theme = useSelector((state) => state.theme.theme);
-
+    const itemsState = useSelector((state) => state.items);
+    const personsState = useSelector((state) => state.persons);
+    console.log(personsState);
+    const items = itemsState?.items
+    const persons = personsState?.persons
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(getAllItems())
+        dispatch(getAllPersons())
+    }, [dispatch])
     const categoryOptions = [
         { value: "person", label: "Person" },
         { value: "item", label: "Item" },
@@ -126,21 +138,21 @@ const Home = () => {
                                 },
                             }}
                         >
-                            {data?.map((item, i) => (
+                            {persons?.map((item, i) => (
                                 <SwiperSlide key={i}>
                                     <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
                                         <div className="img-box">
-                                            <img src={objectImage || item.image} className="w-full" />
+                                            <img src={"http://localhost:5097/Resources/" + item.image} className="w-full" />
                                         </div>
                                         <div className="item-body flex flex-col gap-1 p-3">
-                                            <span className="text-lg text-warning font-semibold">{item.status}</span>
+                                            <span className="text-lg text-warning font-semibold">{item.status == 0 ? "Missed" : "Founded"}</span>
                                             {/* <span className="text-lg font-semibold">{item.category}</span> */}
                                             <h5 className="text-xl font-bold">{item.name}</h5>
                                             <p className="text-lg">{item.age} Years</p>
                                         </div>
                                         <div className="bg-gray-300 dark:bg-gray-700 p-3">
-                                            Since {" "}
-                                            {moment(item.date, "DDMMYYYY").fromNow()}
+                                            {/* Since {" "} */}
+                                            <p>Since: {moment(item.dateTime, "YYYY-MM-DDTHH:mm:ss").fromNow()}</p>
                                         </div>
                                     </Link>
                                 </SwiperSlide>
@@ -198,17 +210,16 @@ const Home = () => {
                                 },
                             }}
                         >
-                            {data?.map((item, i) => (
+                            {items?.map((item, i) => (
                                 <SwiperSlide key={i}>
                                     <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
                                         <div className="img-box">
                                             <img src={objectImage || item.image} className="w-full" />
                                         </div>
                                         <div className="item-body flex flex-col gap-1 p-3">
-                                            <span className="text-lg text-warning font-semibold">{item.status}</span>
+                                            <span className="text-lg text-warning font-semibold">{item.status == 0 ? "Missed" : "Founded"}</span>
                                             {/* <span className="text-lg font-semibold">{item.category}</span> */}
-                                            <h5 className="text-xl font-bold">{item.name}</h5>
-                                            <p className="text-lg">{item.age} Years</p>
+                                            <h5 className="text-xl font-bold">{item.itemName}</h5>
                                         </div>
                                         <div className="bg-gray-300 dark:bg-gray-700 p-3">
                                             Since {" "}
