@@ -5,41 +5,61 @@ import { toast } from "react-toastify";
 
 const notify = (msg, type) => toast[type](msg);
 
-export const getAllPersons = createAsyncThunk("persons/getAll", async (_, { rejectWithValue }) => {
+export const getAllPersons = createAsyncThunk("persons/getAll", async (token, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${baseUrl}/Persons`);
-        console.log(data);
+        const { data } = await axios.get(`${baseUrl}/Persons`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+        });
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});
+export const getAllPersonsSearch = createAsyncThunk("persons/getAllSearch", async ({ token, params }, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get(`${baseUrl}/Persons/search`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            params
+        });
+        return data;
+    } catch (error) {
+        console.log(error.response);
+        return rejectWithValue(error.response.data);
+    }
+});
+
+export const getOnePerson = createAsyncThunk("persons/getOne", async ({ id, token }, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get(`${baseUrl}/Persons/${id}`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
         return data;
     } catch (error) {
         return rejectWithValue(error.response.data);
     }
 });
 
-export const getOnePerson = createAsyncThunk("persons/getOne", async (id, { rejectWithValue }) => {
-    try {
-        const { data } = await axios.get(`${baseUrl}/Persons/${id}`);
-        return data;
-    } catch (error) {
-        return rejectWithValue(error.response.data);
-    }
-});
-
-export const addPerson = createAsyncThunk("persons/addOne", async (personFormData, { rejectWithValue }) => {
+export const addPerson = createAsyncThunk("persons/addOne", async ({ body, token }, { rejectWithValue }) => {
     try {
         const formData = new FormData();
 
-        // Append each key-value pair from personFormData to formData
-        Object.entries(personFormData).forEach(([key, value]) => {
+        // Append each key-value pair from body to formData
+        Object.entries(body).forEach(([key, value]) => {
             formData.append(key, value);
         });
 
-        const config = {
+        const { data } = await axios.post(`${baseUrl}/Persons`, formData, {
             headers: {
+                "Authorization": `Bearer ${token}`,
                 "Content-Type": "multipart/form-data",
-            },
-        };
-
-        const { data } = await axios.post(`${baseUrl}/Persons`, formData, config);
+            }
+        });
         notify('Person added successfully', 'success');
         console.log(data);
         return data;
@@ -92,9 +112,24 @@ const personSlice = createSlice({
             })
             .addCase(getAllPersons.fulfilled, (state, action) => {
                 state.loading = false;
+                console.log(action.payload);
                 state.persons = action.payload.data;
             })
             .addCase(getAllPersons.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || action.error.message;
+            })
+            // Get All Persons Search
+            .addCase(getAllPersonsSearch.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getAllPersonsSearch.fulfilled, (state, action) => {
+                state.loading = false;
+                console.log(action.payload);
+                state.persons = action.payload.data;
+            })
+            .addCase(getAllPersonsSearch.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || action.error.message;
             })
@@ -116,7 +151,7 @@ const personSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addPerson.fulfilled, (state, action) => {
+            .addCase(addPerson.fulfilled, (state) => {
                 state.loading = false;
                 // state.persons.push(action.payload);
             })

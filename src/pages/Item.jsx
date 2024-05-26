@@ -11,10 +11,11 @@ const Item = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const state = useSelector(state => state.items)
+    const authState = useSelector(state => state.user)
     const item = state.item
     useEffect(() => {
-        dispatch(getOneItem(itemId))
-    }, [dispatch, itemId])
+        dispatch(getOneItem({ id: itemId, token:authState.token }))
+    }, [authState.token, dispatch, itemId])
     return (
         <div className="bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen">
             {item ? <>
@@ -37,7 +38,7 @@ const Item = () => {
                                 <p className="text-lg font-medium flex gap-4"><span className="text-main">Since:</span><span>{moment(item.dateTime, "YYYY-MM-DDTHH:mm:ss").fromNow()}</span></p>
                                 <p className="text-lg font-medium flex gap-4"><span className="text-main">Status:</span><span>{item.status == 0 ? "Missed" : "Founded"}</span></p>
                                 <p className="text-lg font-medium flex gap-4"><span className="text-main">ID:</span><span>{item.uniqNumber}</span></p>
-                                <p className="text-lg font-medium flex gap-4"><span className="text-main">Communication Link:</span><span>{<a href={item.communicationLink} target="_blank" rel="noreferrer" className="text-semibold flex  items-center gap-1"><CiLink size={24}/> Click here</a> || "No communication link"}</span></p>
+                                <p className="text-lg font-medium flex gap-4"><span className="text-main">Communication Link:</span><span>{<a href={item.communicationLink} target="_blank" rel="noreferrer" className="text-semibold flex  items-center gap-1"><CiLink size={24} /> Click here</a> || "No communication link"}</span></p>
                             </div>
                         </div>
                     </div>

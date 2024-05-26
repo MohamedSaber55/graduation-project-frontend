@@ -7,32 +7,59 @@ const notify = (msg, type) => toast[type](msg);
 
 export const getAllItems = createAsyncThunk("items/getAll", async (token, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${baseUrl}/Items`);
+        const { data } = await axios.get(`${baseUrl}/Items`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
+        });
         return data;
     } catch (error) {
         return rejectWithValue(error.response.data);
     }
 });
-
-export const getOneItem = createAsyncThunk("items/getOne", async (id, { rejectWithValue }) => {
+export const getAllItemsSearch = createAsyncThunk("items/getAllSearch", async ({ token, params }, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${baseUrl}/Items/${id}`);
+        console.log({token,params});
+        const { data } = await axios.get(`${baseUrl}/Items/search`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            params
+        });
+        return data;
+    } catch (error) {
+        console.log(error.response);
+        return rejectWithValue(error.response.data);
+    }
+});
+export const getOneItem = createAsyncThunk("items/getOne", async ({ id, token }, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get(`${baseUrl}/Items/${id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
+        });
         return data;
     } catch (error) {
         return rejectWithValue(error.response.data);
     }
 });
 
-export const addItem = createAsyncThunk("items/addOne", async (itemFormData, { rejectWithValue }) => {
+export const addItem = createAsyncThunk("items/addOne", async ({ body, token }, { rejectWithValue }) => {
     try {
         const formData = new FormData();
 
-        // Append each field from itemFormData to the FormData object
-        Object.keys(itemFormData).forEach(key => {
-            formData.append(key, itemFormData[key]);
+        // Append each field from body to the FormData object
+        Object.keys(body).forEach(key => {
+            formData.append(key, body[key]);
         });
 
-        const { data } = await axios.post(`${baseUrl}/Items`, formData);
+        const { data } = await axios.post(`${baseUrl}/Items`, formData, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+            }
+        });
         console.log(data);
         notify('Item added successfully', 'success');
         return data;
@@ -90,6 +117,19 @@ const itemsSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload || action.error.message;
             })
+            // Get All Items Search
+            .addCase(getAllItemsSearch.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getAllItemsSearch.fulfilled, (state, action) => {
+                state.loading = false;
+                state.items = action.payload.data;
+            })
+            .addCase(getAllItemsSearch.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || action.error.message;
+            })
             // Get One Item
             .addCase(getOneItem.pending, (state) => {
                 state.loading = true;
@@ -108,7 +148,7 @@ const itemsSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addItem.fulfilled, (state, action) => {
+            .addCase(addItem.fulfilled, (state) => {
                 state.loading = false;
                 // state.items.push(action.payload);
             })

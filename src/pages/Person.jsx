@@ -12,12 +12,12 @@ const Person = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const state = useSelector(state => state.persons);
-    console.log(state);
+    const authState = useSelector(state => state.user)
     const person = state.person;
 
     useEffect(() => {
-        dispatch(getOnePerson(personId));
-    }, [dispatch, personId]);
+        dispatch(getOnePerson({ id: personId, token: authState.token }));
+    }, [authState.token, dispatch, personId]);
 
     return (
         <div className="bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen">

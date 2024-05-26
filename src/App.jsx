@@ -11,13 +11,14 @@ import NotFound from './pages/NotFound'
 import Welcome from './pages/Welcome'
 import Post from './pages/Post'
 import AddPost from './pages/AddPost'
-import Posts from './pages/Posts'
 import Team from './pages/Team'
 import { ToastContainer } from 'react-toastify'
 import ProtectedRoutes from './components/ProtectedRouter'
 import VerifyOTP from './pages/VerifyOTP'
 import Person from './pages/Person'
 import Item from './pages/Item'
+import AllItems from './pages/AllItems'
+import AllPersons from './pages/AllPersons'
 
 function App() {
 
@@ -28,7 +29,8 @@ function App() {
 
         { path: "/about", element: <ProtectedRoutes> <About /></ProtectedRoutes> },
         { path: "/contact", element: <ProtectedRoutes><Contact /></ProtectedRoutes> },
-        { path: "/posts", element: <ProtectedRoutes><Posts /></ProtectedRoutes> },
+        { path: "/items", element: <ProtectedRoutes><AllItems /></ProtectedRoutes> },
+        { path: "/persons", element: <ProtectedRoutes><AllPersons /></ProtectedRoutes> },
         { path: "/post/:postId", element: <ProtectedRoutes><Post /></ProtectedRoutes> },
         { path: "/person/:personId", element: <ProtectedRoutes><Person /></ProtectedRoutes> },
         { path: "/item/:itemId", element: <ProtectedRoutes><Item /></ProtectedRoutes> },

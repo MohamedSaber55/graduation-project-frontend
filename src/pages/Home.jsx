@@ -17,14 +17,14 @@ const Home = () => {
     const theme = useSelector((state) => state.theme.theme);
     const itemsState = useSelector((state) => state.items);
     const personsState = useSelector((state) => state.persons);
-    console.log(personsState);
+    const authState = useSelector((state) => state.user);
     const items = itemsState?.items
     const persons = personsState?.persons
     const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(getAllItems())
-        dispatch(getAllPersons())
-    }, [dispatch])
+        dispatch(getAllItems(authState.token))
+        dispatch(getAllPersons(authState.token))
+    }, [authState, dispatch])
     const categoryOptions = [
         { value: "person", label: "Person" },
         { value: "item", label: "Item" },
@@ -128,7 +128,7 @@ const Home = () => {
                                 },
                             }}
                         >
-                            {persons?.map((item, i) => (
+                            {persons.slice(0, 20)?.map((item, i) => (
                                 <SwiperSlide key={i}>
                                     <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/person/${item.id}`}>
                                         <div className="img-box">
@@ -137,7 +137,7 @@ const Home = () => {
                                         <div className="item-body flex flex-col gap-1 p-3">
                                             <span className="text-lg text-warning font-semibold">{item.status == 0 ? "Missed" : "Founded"}</span>
                                             {/* <span className="text-lg font-semibold">{item.category}</span> */}
-                                            <h5 className="text-xl font-bold">{item.name}</h5>
+                                            <h5 className="text-xl font-bold">{item.personName}</h5>
                                             <p className="text-lg">{item.age} Years</p>
                                         </div>
                                         <div className="bg-gray-300 dark:bg-gray-700 p-3">
@@ -200,7 +200,7 @@ const Home = () => {
                                 },
                             }}
                         >
-                            {items?.map((item, i) => (
+                            {items.slice(0, 20)?.map((item, i) => (
                                 <SwiperSlide key={i}>
                                     <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/item/${item.id}`}>
                                         <div className="img-box">

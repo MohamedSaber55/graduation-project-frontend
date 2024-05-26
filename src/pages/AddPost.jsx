@@ -20,6 +20,7 @@ const AddPost = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const [postType, setPostType] = useState("person");
     const theme = useSelector((state) => state.theme.theme);
+    const authSlice = useSelector((state) => state.user);
     const dispatch = useDispatch()
     // Validation schemas
     const validationSchemaPerson = object({
@@ -38,7 +39,7 @@ const AddPost = () => {
     const validationSchemaItem = object({
         ItemName: string().min(2).required("ItemName is required"),
         phoneNumber: string().required("Phone number is required"),
-        UniqNumber : string().required("Phone number is required"),
+        UniqNumber: string().required("Phone number is required"),
         status: string().required("Status is required"),
         location: string().required("Location is required"),
         dateTime: string().required("Date is required"),
@@ -78,11 +79,10 @@ const AddPost = () => {
             const filteredValues = Object.fromEntries(
                 Object.entries(values).filter(([, value]) => value !== "")
             );
-
             if (postType == "person") {
-                dispatch(addPerson(filteredValues))
+                dispatch(addPerson({ body: filteredValues, token: authSlice.token }))
             } else (
-                dispatch(addItem(filteredValues))
+                dispatch(addItem({ body: filteredValues, token: authSlice.token }))
             )
             console.log(filteredValues);
         }

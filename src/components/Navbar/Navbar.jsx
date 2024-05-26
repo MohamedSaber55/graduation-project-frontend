@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
 const links = [
     { title: "Home", to: "/" },
-    { title: "Posts", to: "/posts" },
+    { title: "Items", to: "/items" },
+    { title: "Persons", to: "/persons" },
     { title: "About", to: "/about" },
     { title: "Team", to: "/team" },
     { title: "Contact", to: "/contact" },
@@ -50,7 +51,7 @@ const Navbar = () => {
                                 <img src={logo} className="h-12" alt="" />
                             </Link>
                         </div>
-                        <div className="hidden md:flex gap-5 items-center">
+                        <div className="hidden md:flex gap-4 items-center">
                             {state.token && links.map((link, i) =>
                                 <Link key={i} to={link.to} className={`font-medium w-full py-2 px-0.5  hover:text-main`}>{link.title}</Link>
                             )}
