@@ -31,9 +31,40 @@ input,
 textarea {
     outline: 0;
 }
-.react-datepicker-wrapper{
+
+.react-datepicker-wrapper {
     width: 100% !important;
 }
-.react-datepicker__input-container{
+
+.react-datepicker__input-container {
     width: 100% !important;
+}
+
+.loader {
+    /* Light background border */
+    /* Main color for the loader */
+    animation: spin 1s linear infinite;
+    /* Animation properties */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+        /* Start at 0 degrees */
+    }
+
+    100% {
+        transform: rotate(360deg);
+        /* Complete rotation at 360 degrees */
+    }
+}
+
+.react-tel-input .country-list .country:hover{
+    color: #000;
+    background-color: #9c9c9c;
+}
+.react-tel-input .country-list .country.highlight{
+    color: #000;
+    background-color: #9c9c9c;
+
 }

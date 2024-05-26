@@ -2,11 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseUrl } from "../../utils/baseUrl";
 import { toast } from "react-toastify";
-
 const notify = (msg, type) => toast[type](msg);
 
 
-export const getAllItems = createAsyncThunk("items/getAll", async (_, { rejectWithValue }) => {
+export const getAllItems = createAsyncThunk("items/getAll", async (token, { rejectWithValue }) => {
     try {
         const { data } = await axios.get(`${baseUrl}/Items`);
         return data;
@@ -24,17 +23,25 @@ export const getOneItem = createAsyncThunk("items/getOne", async (id, { rejectWi
     }
 });
 
-export const addItem = createAsyncThunk("items/addOne", async (item, { rejectWithValue }) => {
+export const addItem = createAsyncThunk("items/addOne", async (itemFormData, { rejectWithValue }) => {
     try {
-        const { data } = await axios.post(`${baseUrl}/Items`, item);
+        const formData = new FormData();
+
+        // Append each field from itemFormData to the FormData object
+        Object.keys(itemFormData).forEach(key => {
+            formData.append(key, itemFormData[key]);
+        });
+
+        const { data } = await axios.post(`${baseUrl}/Items`, formData);
+        console.log(data);
         notify('Item added successfully', 'success');
         return data;
     } catch (error) {
+        console.log(error.response);
         notify('Failed to add item', 'error');
         return rejectWithValue(error.response.data);
     }
 });
-
 export const updateItem = createAsyncThunk("items/updateOne", async ({ id, item }, { rejectWithValue }) => {
     try {
         const { data } = await axios.put(`${baseUrl}/Items/${id}`, item);
@@ -90,7 +97,7 @@ const itemsSlice = createSlice({
             })
             .addCase(getOneItem.fulfilled, (state, action) => {
                 state.loading = false;
-                state.item = action.payload;
+                state.item = action.payload.data;
             })
             .addCase(getOneItem.rejected, (state, action) => {
                 state.loading = false;
@@ -103,7 +110,7 @@ const itemsSlice = createSlice({
             })
             .addCase(addItem.fulfilled, (state, action) => {
                 state.loading = false;
-                state.items.push(action.payload);
+                // state.items.push(action.payload);
             })
             .addCase(addItem.rejected, (state, action) => {
                 state.loading = false;

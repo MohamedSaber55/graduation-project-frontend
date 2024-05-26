@@ -97,52 +97,42 @@ const Home = () => {
                             spaceBetween={20}
                             breakpoints={{
                                 280: {
-                                    // width: 280,
                                     slidesPerView: 1,
                                 },
                                 375: {
-                                    // width: 375,
                                     slidesPerView: 1,
                                 },
                                 425: {
-                                    // width: 425,
                                     slidesPerView: 1,
                                 },
                                 576: {
-                                    // width: 576,
                                     slidesPerView: 1,
                                 },
                                 640: {
-                                    // width: 576,
                                     slidesPerView: 2,
                                 },
                                 768: {
-                                    // width: 768,
                                     slidesPerView: 3,
                                 },
                                 1024: {
-                                    // width: 1024,
                                     slidesPerView: 4,
                                 },
                                 2048: {
-                                    // width: 2048,
                                     slidesPerView: 4,
                                 },
                                 2560: {
-                                    // width: 2560,
                                     slidesPerView: 5,
                                 },
                                 3840: {
-                                    // width: 3840,
                                     slidesPerView: 5,
                                 },
                             }}
                         >
                             {persons?.map((item, i) => (
                                 <SwiperSlide key={i}>
-                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
+                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/person/${item.id}`}>
                                         <div className="img-box">
-                                            <img src={"http://localhost:5097/Resources/" + item.image} className="w-full" />
+                                            <img src={"http://localhost:5097/Resources/" + item.image} className="w-full aspect-square object-cover" />
                                         </div>
                                         <div className="item-body flex flex-col gap-1 p-3">
                                             <span className="text-lg text-warning font-semibold">{item.status == 0 ? "Missed" : "Founded"}</span>
@@ -212,9 +202,9 @@ const Home = () => {
                         >
                             {items?.map((item, i) => (
                                 <SwiperSlide key={i}>
-                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/post/${item.id}`}>
+                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/item/${item.id}`}>
                                         <div className="img-box">
-                                            <img src={"http://localhost:5097/Resources/" + item.image} className="w-full" />
+                                            <img src={"http://localhost:5097/Resources/" + item.image} className="w-full aspect-square object-cover" />
                                         </div>
                                         <div className="item-body flex flex-col gap-1 p-3">
                                             <span className="text-lg text-warning font-semibold">{item.status == 0 ? "Missed" : "Founded"}</span>
@@ -222,8 +212,7 @@ const Home = () => {
                                             <h5 className="text-xl font-bold">{item.itemName}</h5>
                                         </div>
                                         <div className="bg-gray-300 dark:bg-gray-700 p-3">
-                                            Since {" "}
-                                            {moment(item.date, "DDMMYYYY").fromNow()}
+                                            <p>Since: {moment(item.dateTime, "YYYY-MM-DDTHH:mm:ss").fromNow()}</p>
                                         </div>
                                     </Link>
                                 </SwiperSlide>

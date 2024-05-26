@@ -4,48 +4,98 @@ import { MdKeyboardArrowLeft } from "react-icons/md";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { mixed, object, string } from "yup";
-import { useSelector } from "react-redux";
-import Select from "react-select"
+import { useDispatch, useSelector } from "react-redux";
+import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import { addPerson } from "../store/slices/personsSlice";
+import { addItem } from "../store/slices/itemSlice";
+import moment from "moment";
+
+
 const AddPost = () => {
     const navigate = useNavigate();
     const [imagePreview, setImagePreview] = useState(null);
-    const [postType, setPostType] = useState("person"); // State to track post type
+    const [postType, setPostType] = useState("person");
     const theme = useSelector((state) => state.theme.theme);
-
+    const dispatch = useDispatch()
+    // Validation schemas
     const validationSchemaPerson = object({
-        name: string().min(2).required(),
-        status: string().required(),
-        category: string().required(),
-        location: string().required(),
-        date: string().required(),
-        communicationLink: string().url().required(),
-        description: string().required(),
-        image: mixed().required(),
-        age: string().required(),
+        personName: string().min(2).required("Name is required"),
+        phoneNumber: string().required("Phone number is required"),
+        status: string().required("Status is required"),
+        location: string().required("Location is required"),
+        dateTime: string().required("Date is required"),
+        communicationLink: string().url("Invalid URL").required("Communication link is required"),
+        otherDetails: string().required("Description is required"),
+        gender: string().required("Gender is required"),
+        imageFile: mixed().required("Image is required"),
+        age: string().required("Age is required"),
     });
 
     const validationSchemaItem = object({
-        title: string().min(2).required(),
-        status: string().required(),
-        location: string().required(),
-        date: string().required(),
-        communicationLink: string().url().required(),
-        description: string().required(),
-        image: mixed().required(),
+        ItemName: string().min(2).required("ItemName is required"),
+        phoneNumber: string().required("Phone number is required"),
+        UniqNumber : string().required("Phone number is required"),
+        status: string().required("Status is required"),
+        location: string().required("Location is required"),
+        dateTime: string().required("Date is required"),
+        communicationLink: string().url("Invalid URL").required("Communication link is required"),
+        otherDetails: string().required("Description is required"),
+        imageFile: mixed().required("Image is required"),
     });
 
     const validationSchema = postType === "item" ? validationSchemaItem : validationSchemaPerson;
 
+    // Formik setup
+    const addPostFormik = useFormik({
+        initialValues: postType === "item" ? {
+            ItemName: "",
+            phoneNumber: "",
+            status: "",
+            location: "",
+            dateTime: "",
+            communicationLink: "",
+            otherDetails: "",
+            imageFile: null,
+        } : {
+            personName: "",
+            phoneNumber: "",
+            status: "",
+            location: "",
+            dateTime: "",
+            communicationLink: "",
+            otherDetails: "",
+            gender: "",
+            imageFile: null,
+            age: ""
+        },
+        validationSchema,
+        onSubmit: (values) => {
+            // Filter out empty values
+            const filteredValues = Object.fromEntries(
+                Object.entries(values).filter(([, value]) => value !== "")
+            );
+
+            if (postType == "person") {
+                dispatch(addPerson(filteredValues))
+            } else (
+                dispatch(addItem(filteredValues))
+            )
+            console.log(filteredValues);
+        }
+    });
+
     const handleChange = (event) => {
         const { name, files } = event.target;
 
-        if (name === 'image' && files && files[0]) {
+        if (name === 'imageFile' && files && files[0]) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 setImagePreview(e.target.result);
-                addPostFormik.setFieldValue('image', files[0]); // Set formik value
+                addPostFormik.setFieldValue('imageFile', files[0]);
             };
             reader.readAsDataURL(files[0]);
         }
@@ -63,11 +113,13 @@ const AddPost = () => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 setImagePreview(e.target.result);
-                addPostFormik.setFieldValue('image', files[0]);
+                addPostFormik.setFieldValue('imageFile', files[0]);
             };
             reader.readAsDataURL(files[0]);
         }
     };
+
+    // Custom styles for React Select
     const customStyles = {
         control: (provided, state) => ({
             ...provided,
@@ -96,35 +148,17 @@ const AddPost = () => {
             },
         }),
     };
-    const statusOptions = [
-        { value: 'lost', label: 'Lost' },
-        { value: 'found', label: 'Found' },
-    ];
 
-    const addPostFormik = useFormik({
-        initialValues: postType === "item" ? {
-            title: "",
-            status: "",
-            location: "",
-            date: "",
-            communicationLink: "",
-            description: "",
-            image: null,
-        } : {
-            name: "",
-            status: "",
-            location: "",
-            date: "",
-            communicationLink: "",
-            description: "",
-            image: null,
-            age: ""
-        },
-        validationSchema,
-        onSubmit: (values) => {
-            console.log(values);
-        }
-    });
+    // Status options
+    const statusOptions = [
+        { value: '0', label: 'Lost' },
+        { value: '1', label: 'Found' },
+    ];
+    // Define gender options
+    const genderOptions = [
+        { value: '0', label: 'Male' },
+        { value: '0', label: 'Female' },
+    ];
 
     return (
         <div className="bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen">
@@ -172,7 +206,7 @@ const AddPost = () => {
                                 </label>
                                 <input
                                     type="file"
-                                    name="image"
+                                    name="imageFile"
                                     id="fileInput"
                                     className="hidden"
                                     onChange={handleChange}
@@ -183,18 +217,59 @@ const AddPost = () => {
                     <div className="another-inputs bg-white dark:bg-dark py-8 px-5 rounded-md mt-5 space-y-8">
                         {postType === "person" ? (
                             <>
-                                <div className="grid md:grid-cols-2 gap-8">
+                                <div className="grid md:grid-cols-1 gap-8">
                                     <div className="item space-y-3">
-                                        <label htmlFor="name" className="text-main text-lg font-semibold">Name:</label>
+                                        <label htmlFor="personName" className="text-main text-lg font-semibold">Name:</label>
                                         <input
                                             type="text"
-                                            name="name"
-                                            id="name"
+                                            name="personName"
+                                            id="personName"
                                             className="p-3 rounded-lg border border-main w-full bg-transparent block"
                                             placeholder="Name"
                                             onChange={addPostFormik.handleChange}
-                                            value={addPostFormik.values.name}
+                                            value={addPostFormik.values.personName}
                                         />
+                                        {addPostFormik.errors.personName && addPostFormik.touched.personName && (
+                                            <div className="text-red-600">{addPostFormik.errors.personName}</div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="grid md:grid-cols-2 gap-8">
+                                    <div className="item space-y-3">
+                                        <label htmlFor="phoneNumber" className="text-main text-lg font-semibold">Phone Number:</label>
+                                        <PhoneInput
+                                            country={'eg'}
+                                            value={addPostFormik.values.phoneNumber}
+                                            onChange={phone => addPostFormik.setFieldValue('phoneNumber', phone)}
+                                            onBlur={() => addPostFormik.setFieldTouched('phoneNumber', true)}
+                                            inputProps={{
+                                                name: 'phoneNumber',
+                                                required: true,
+                                                autoFocus: false,
+                                                className: "p-3 ps-12 rounded-lg border border-main w-full bg-transparent block"
+                                            }}
+                                            inputStyle={{
+                                                backgroundColor: theme === "dark" ? "#1f293700" : "#f3f4f600",
+                                                color: theme === "dark" ? "#fff" : "#000",
+                                                borderRadius: "6px",
+                                                outline: "none",
+                                                boxShadow: state => state.isFocused ? `0 0 0 1px ${theme === "dark" ? "#E1752C" : "#E1752C"}` : "0 0 0 1px #E1752C"
+                                            }}
+                                            dropdownStyle={{
+                                                backgroundColor: theme === "dark" ? "#1f2937" : "#f3f4f6",
+                                            }}
+                                            optionStyle={{
+                                                backgroundColor: theme === "dark" ? "#1f2937" : "#f3f4f6",
+                                                color: theme === "dark" ? "#000" : "#000",
+                                                "&:hover": {
+                                                    backgroundColor: theme === "darks" ? "#2d3748" : "#cbd5e0",
+                                                    color: "#000",
+                                                },
+                                            }}
+                                        />
+                                        {addPostFormik.errors.phoneNumber && addPostFormik.touched.phoneNumber && (
+                                            <div className="text-red-600">{addPostFormik.errors.phoneNumber}</div>
+                                        )}
                                     </div>
                                     <div className="item space-y-3">
                                         <label htmlFor="location" className="text-main text-lg font-semibold">Location:</label>
@@ -207,19 +282,27 @@ const AddPost = () => {
                                             onChange={addPostFormik.handleChange}
                                             value={addPostFormik.values.location}
                                         />
+                                        {addPostFormik.errors.location && addPostFormik.touched.location && (
+                                            <div className="text-red-600">{addPostFormik.errors.location}</div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="item space-y-3 ">
-                                        <label htmlFor="date" className="text-main text-lg font-semibold block">Date:</label>
+                                    <div className="item space-y-3">
+                                        <label htmlFor="dateTime" className="text-main text-lg font-semibold">Date:</label>
                                         <DatePicker
-                                            selected={addPostFormik.values.date}
-                                            onChange={date => addPostFormik.setFieldValue('date', date)}
-                                            dateFormat="yyyy-MM-dd"
+                                            selected={addPostFormik.values.dateTime}
+                                            onChange={date => {
+                                                const formattedDate = date ? moment(date).format('YYYY-MM-DD') : ''; // or null
+                                                addPostFormik.setFieldValue('dateTime', formattedDate);
+                                            }} dateFormat="yyyy-MM-dd"
                                             placeholderText="Date"
                                             isClearable
                                             className="p-3 rounded-lg border border-main bg-transparent block w-full"
                                         />
+                                        {addPostFormik.errors.dateTime && addPostFormik.touched.dateTime && (
+                                            <div className="text-red-600">{addPostFormik.errors.dateTime}</div>
+                                        )}
                                     </div>
                                     <div className="item space-y-3">
                                         <label htmlFor="age" className="text-main text-lg font-semibold">Age:</label>
@@ -234,6 +317,9 @@ const AddPost = () => {
                                             onChange={addPostFormik.handleChange}
                                             value={addPostFormik.values.age}
                                         />
+                                        {addPostFormik.errors.age && addPostFormik.touched.age && (
+                                            <div className="text-red-600">{addPostFormik.errors.age}</div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="grid md:grid-cols-2 gap-8">
@@ -245,6 +331,24 @@ const AddPost = () => {
                                             placeholder="Select Status"
                                             onChange={(option) => addPostFormik.setFieldValue('status', option.value)}
                                         />
+                                        {addPostFormik.errors.status && addPostFormik.touched.status && (
+                                            <div className="text-red-600">{addPostFormik.errors.status}</div>
+                                        )}
+                                    </div>
+                                    <div className="item space-y-3">
+                                        <label htmlFor="gender" className="text-main text-lg font-semibold">Gender:</label>
+                                        <Select
+                                            id="gender"
+                                            name="gender"
+                                            styles={customStyles}
+                                            options={genderOptions}
+                                            placeholder="Select Gender"
+                                            onChange={(option) => addPostFormik.setFieldValue('gender', option.value)}
+                                            onBlur={() => addPostFormik.setFieldTouched('gender', true)}
+                                        />
+                                        {addPostFormik.errors.gender && addPostFormik.touched.gender && (
+                                            <div className="text-red-600">{addPostFormik.errors.gender}</div>
+                                        )}
                                     </div>
                                 </div>
                             </>
@@ -252,16 +356,72 @@ const AddPost = () => {
                             <>
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <div className="item space-y-3">
-                                        <label htmlFor="title" className="text-main text-lg font-semibold">Title:</label>
+                                        <label htmlFor="ItemName" className="text-main text-lg font-semibold">ItemName:</label>
                                         <input
                                             type="text"
-                                            name="title"
-                                            id="title"
+                                            name="ItemName"
+                                            id="ItemName"
                                             className="p-3 rounded-lg border border-main w-full bg-transparent block"
-                                            placeholder="Title"
+                                            placeholder="ItemName"
                                             onChange={addPostFormik.handleChange}
-                                            value={addPostFormik.values.title}
+                                            value={addPostFormik.values.ItemName}
                                         />
+                                        {addPostFormik.errors.ItemName && addPostFormik.touched.ItemName && (
+                                            <div className="text-red-600">{addPostFormik.errors.ItemName}</div>
+                                        )}
+                                    </div>
+                                    <div className="item space-y-3">
+                                        <label htmlFor="UniqNumber" className="text-main text-lg font-semibold">Your Card Number:</label>
+                                        <input
+                                            type="text"
+                                            name="UniqNumber"
+                                            id="UniqNumber"
+                                            className="p-3 rounded-lg border border-main w-full bg-transparent block"
+                                            placeholder="Your Card Number"
+                                            onChange={addPostFormik.handleChange}
+                                            value={addPostFormik.values.UniqNumber}
+                                        />
+                                        {addPostFormik.errors.UniqNumber && addPostFormik.touched.UniqNumber && (
+                                            <div className="text-red-600">{addPostFormik.errors.UniqNumber}</div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="grid md:grid-cols-2 gap-8">
+                                    <div className="item space-y-3">
+                                        <label htmlFor="phoneNumber" className="text-main text-lg font-semibold">Phone Number:</label>
+                                        <PhoneInput
+                                            country={'eg'}
+                                            value={addPostFormik.values.phoneNumber}
+                                            onChange={phone => addPostFormik.setFieldValue('phoneNumber', phone)}
+                                            onBlur={() => addPostFormik.setFieldTouched('phoneNumber', true)}
+                                            inputProps={{
+                                                name: 'phoneNumber',
+                                                required: true,
+                                                autoFocus: false,
+                                                className: "p-3 ps-12 rounded-lg border border-main w-full bg-transparent block"
+                                            }}
+                                            inputStyle={{
+                                                backgroundColor: theme === "dark" ? "#1f293700" : "#f3f4f600",
+                                                color: theme === "dark" ? "#fff" : "#000",
+                                                borderRadius: "6px",
+                                                outline: "none",
+                                                boxShadow: state => state.isFocused ? `0 0 0 1px ${theme === "dark" ? "#E1752C" : "#E1752C"}` : "0 0 0 1px #E1752C"
+                                            }}
+                                            dropdownStyle={{
+                                                backgroundColor: theme === "dark" ? "#1f2937" : "#f3f4f6",
+                                            }}
+                                            optionStyle={{
+                                                backgroundColor: theme === "dark" ? "#1f2937" : "#f3f4f6",
+                                                color: theme === "dark" ? "#000" : "#000",
+                                                "&:hover": {
+                                                    backgroundColor: theme === "darks" ? "#2d3748" : "#cbd5e0",
+                                                    color: "#000",
+                                                },
+                                            }}
+                                        />
+                                        {addPostFormik.errors.phoneNumber && addPostFormik.touched.phoneNumber && (
+                                            <div className="text-red-600">{addPostFormik.errors.phoneNumber}</div>
+                                        )}
                                     </div>
                                     <div className="item space-y-3">
                                         <label htmlFor="location" className="text-main text-lg font-semibold">Location:</label>
@@ -274,6 +434,9 @@ const AddPost = () => {
                                             onChange={addPostFormik.handleChange}
                                             value={addPostFormik.values.location}
                                         />
+                                        {addPostFormik.errors.location && addPostFormik.touched.location && (
+                                            <div className="text-red-600">{addPostFormik.errors.location}</div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="grid md:grid-cols-2 gap-8">
@@ -285,17 +448,26 @@ const AddPost = () => {
                                             placeholder="Select Status"
                                             onChange={(option) => addPostFormik.setFieldValue('status', option.value)}
                                         />
+                                        {addPostFormik.errors.status && addPostFormik.touched.status && (
+                                            <div className="text-red-600">{addPostFormik.errors.status}</div>
+                                        )}
                                     </div>
-                                    <div className="item space-y-3 ">
-                                        <label htmlFor="date" className="text-main text-lg font-semibold block">Date:</label>
+                                    <div className="item space-y-3">
+                                        <label htmlFor="dateTime" className="text-main text-lg font-semibold">Date:</label>
                                         <DatePicker
-                                            selected={addPostFormik.values.date}
-                                            onChange={date => addPostFormik.setFieldValue('date', date)}
+                                            selected={addPostFormik.values.dateTime}
+                                            onChange={date => {
+                                                const formattedDate = date ? moment(date).format('YYYY-MM-DD') : ''; // or null
+                                                addPostFormik.setFieldValue('dateTime', formattedDate);
+                                            }}
                                             dateFormat="yyyy-MM-dd"
                                             placeholderText="Date"
                                             isClearable
                                             className="p-3 rounded-lg border border-main bg-transparent block w-full"
                                         />
+                                        {addPostFormik.errors.dateTime && addPostFormik.touched.dateTime && (
+                                            <div className="text-red-600">{addPostFormik.errors.dateTime}</div>
+                                        )}
                                     </div>
                                 </div>
                             </>
@@ -313,20 +485,26 @@ const AddPost = () => {
                                 onChange={addPostFormik.handleChange}
                                 value={addPostFormik.values.communicationLink}
                             />
+                            {addPostFormik.errors.communicationLink && addPostFormik.touched.communicationLink && (
+                                <div className="text-red-600">{addPostFormik.errors.communicationLink}</div>
+                            )}
                         </div>
                     </div>
                     <div className="text-area bg-white dark:bg-dark py-8 px-5 rounded-md mt-5 space-y-3">
-                        <label htmlFor="description" className="text-main text-lg font-semibold">Description:</label>
+                        <label htmlFor="otherDetails" className="text-main text-lg font-semibold">Description:</label>
                         <textarea
-                            name="description"
-                            id="description"
+                            name="otherDetails"
+                            id="otherDetails"
                             className="p-3 rounded-lg border border-main w-full bg-transparent block"
                             placeholder="Description"
                             cols="30"
                             rows="10"
                             onChange={addPostFormik.handleChange}
-                            value={addPostFormik.values.description}
+                            value={addPostFormik.values.otherDetails}
                         ></textarea>
+                        {addPostFormik.errors.otherDetails && addPostFormik.touched.otherDetails && (
+                            <div className="text-red-600">{addPostFormik.errors.otherDetails}</div>
+                        )}
                     </div>
                     <div className="submit button bg-white dark:bg-dark py-4 px-5 rounded-md mt-5 flex justify-center">
                         <button type="submit" className="bg-main text-lg py-2 px-8 text-white dark:hover:text-light hover:text-dark hover:bg-transparent border border-main rounded-lg duration-150">

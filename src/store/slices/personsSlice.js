@@ -24,16 +24,32 @@ export const getOnePerson = createAsyncThunk("persons/getOne", async (id, { reje
     }
 });
 
-export const addPerson = createAsyncThunk("persons/addOne", async (person, { rejectWithValue }) => {
+export const addPerson = createAsyncThunk("persons/addOne", async (personFormData, { rejectWithValue }) => {
     try {
-        const { data } = await axios.post(`${baseUrl}/Persons`, person);
+        const formData = new FormData();
+
+        // Append each key-value pair from personFormData to formData
+        Object.entries(personFormData).forEach(([key, value]) => {
+            formData.append(key, value);
+        });
+
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        };
+
+        const { data } = await axios.post(`${baseUrl}/Persons`, formData, config);
         notify('Person added successfully', 'success');
+        console.log(data);
         return data;
     } catch (error) {
         notify('Failed to add person', 'error');
+        console.log(error.response);
         return rejectWithValue(error.response.data);
     }
 });
+
 
 export const updatePerson = createAsyncThunk("persons/updateOne", async ({ id, person }, { rejectWithValue }) => {
     try {
@@ -89,7 +105,7 @@ const personSlice = createSlice({
             })
             .addCase(getOnePerson.fulfilled, (state, action) => {
                 state.loading = false;
-                state.person = action.payload;
+                state.person = action.payload.data;
             })
             .addCase(getOnePerson.rejected, (state, action) => {
                 state.loading = false;
@@ -102,7 +118,7 @@ const personSlice = createSlice({
             })
             .addCase(addPerson.fulfilled, (state, action) => {
                 state.loading = false;
-                state.persons.push(action.payload);
+                // state.persons.push(action.payload);
             })
             .addCase(addPerson.rejected, (state, action) => {
                 state.loading = false;
