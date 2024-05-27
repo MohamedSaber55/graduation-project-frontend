@@ -3,13 +3,13 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from "swiper/modules"
 import 'swiper/css';
 import 'swiper/css/free-mode';
-import moment from "moment";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select"
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getAllItems, getAllItemsSearch } from "../store/slices/itemSlice";
 import { getAllPersons, getAllPersonsSearch } from "../store/slices/personsSlice";
+import Post from '../components/Post';
 
 const Home = () => {
     const [searchText, setSearchText] = useState("")
@@ -21,7 +21,7 @@ const Home = () => {
     const items = itemsState?.items
     const persons = personsState?.persons
     const dispatch = useDispatch()
-    const navigate = useNavigate(); // Initialize the navigate function
+    const navigate = useNavigate();
     useEffect(() => {
         dispatch(getAllItems(authState.token))
         dispatch(getAllPersons(authState.token))
@@ -141,30 +141,16 @@ const Home = () => {
                                 },
                             }}
                         >
-                            {persons.slice(0, 20)?.map((item, i) => (
+                            {persons.slice(0, 20)?.map((person, i) => (
                                 <SwiperSlide key={i}>
-                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/person/${item.id}`}>
-                                        <div className="img-box">
-                                            <img src={"http://localhost:5097/Resources/" + item.image} className="w-full aspect-square object-cover" />
-                                        </div>
-                                        <div className="item-body flex flex-col gap-1 p-3">
-                                            <span className="text-lg text-warning font-semibold">{item.status == 0 ? "Missed" : "Founded"}</span>
-                                            {/* <span className="text-lg font-semibold">{item.category}</span> */}
-                                            <h5 className="text-xl font-bold">{item.personName}</h5>
-                                            <p className="text-lg">{item.age} Years</p>
-                                        </div>
-                                        <div className="bg-gray-300 dark:bg-gray-700 p-3">
-                                            {/* Since {" "} */}
-                                            <p>Since: {moment(item.dateTime, "YYYY-MM-DDTHH:mm:ss").fromNow()}</p>
-                                        </div>
-                                    </Link>
+                                    <Post key={person.id} type="person" data={person} />
                                 </SwiperSlide>
                             ))}
                         </Swiper>
                     </div>
                 </div>
                 <div className="container bg-white dark:bg-dark p-6 rounded-xl shadow-lg my-5">
-                    <h3 className="text-3xl md:text-4xl font-semibold my-5 text-center">Objects</h3>
+                    <h3 className="text-3xl md:text-4xl font-semibold my-5 text-center">Cards</h3>
                     <div className="py-5">
                         <Swiper
                             modules={[FreeMode]}
@@ -215,19 +201,7 @@ const Home = () => {
                         >
                             {items.slice(0, 20)?.map((item, i) => (
                                 <SwiperSlide key={i}>
-                                    <Link className="bg-light dark:bg-dark-light block rounded-md overflow-hidden" to={`/item/${item.id}`}>
-                                        <div className="img-box">
-                                            <img src={"http://localhost:5097/Resources/" + item.image} className="w-full aspect-square object-cover" />
-                                        </div>
-                                        <div className="item-body flex flex-col gap-1 p-3">
-                                            <span className="text-lg text-warning font-semibold">{item.status == 0 ? "Missed" : "Founded"}</span>
-                                            {/* <span className="text-lg font-semibold">{item.category}</span> */}
-                                            <h5 className="text-xl font-bold">{item.itemName}</h5>
-                                        </div>
-                                        <div className="bg-gray-300 dark:bg-gray-700 p-3">
-                                            <p>Since: {moment(item.dateTime, "YYYY-MM-DDTHH:mm:ss").fromNow()}</p>
-                                        </div>
-                                    </Link>
+                                    <Post type="item" data={item} />
                                 </SwiperSlide>
                             ))}
                         </Swiper>

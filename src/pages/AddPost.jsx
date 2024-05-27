@@ -79,12 +79,13 @@ const AddPost = () => {
             const filteredValues = Object.fromEntries(
                 Object.entries(values).filter(([, value]) => value !== "")
             );
-            if (postType == "person") {
+            if (postType === "person") {
                 dispatch(addPerson({ body: filteredValues, token: authSlice.token }))
-            } else (
+                    .then(() => navigate('/persons')); // Navigate to persons after adding person
+            } else {
                 dispatch(addItem({ body: filteredValues, token: authSlice.token }))
-            )
-            console.log(filteredValues);
+                    .then(() => navigate('/items')); // Navigate to items after adding item
+            }
         }
     });
 
@@ -169,13 +170,13 @@ const AddPost = () => {
                 </div>
                 <div className="flex justify-center mb-5">
                     <button
-                        className={`px-4 py-2 rounded-l-lg ${postType === "person" ? "bg-main text-white" : "bg-white dark:bg-dark text-main border border-main"}`}
+                        className={`px-4 py-2 w-48 rounded-l-lg ${postType === "person" ? "bg-main text-white" : "bg-white dark:bg-dark text-main border border-main"}`}
                         onClick={() => setPostType("person")}
                     >
                         Person
                     </button>
                     <button
-                        className={`px-4 py-2 rounded-r-lg ${postType === "item" ? "bg-main text-white" : "bg-white dark:bg-dark text-main border border-main"}`}
+                        className={`px-4 py-2 w-48 rounded-r-lg ${postType === "item" ? "bg-main text-white" : "bg-white dark:bg-dark text-main border border-main"}`}
                         onClick={() => setPostType("item")}
                     >
                         Item

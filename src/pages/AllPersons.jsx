@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
 import Pagination from '../components/Pagination';
 import { getAllPersons, getAllPersonsSearch } from '../store/slices/personsSlice';
 import Loading from './Loading';
+import Post from '../components/Post';
 
 const AllPersons = () => {
     const personsState = useSelector(state => state.persons);
@@ -62,24 +61,7 @@ const AllPersons = () => {
                         <>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-white dark:bg-dark p-5 rounded-md">
                                 {currentPersons.map(person => (
-                                    <Link to={`/person/${person?.id}`} key={person?.id} className="person-card bg-light dark:bg-dark-light rounded-md overflow-hidden flex flex-col">
-                                        <div className="item-image">
-                                            <img src={"http://localhost:5097/Resources/" + person?.image} alt={person?.personName} className="w-full h-full aspect-square object-cover object-center" />
-                                        </div>
-                                        <div className="person-details p-4">
-                                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{person?.personName}</h2>
-                                            <div className="grid grid-cols-2 gap-2 mb-2">
-                                                <div>
-                                                    <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Location</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">{person?.location}</p>
-                                                </div>
-                                                <div className="">
-                                                    <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Date</p>
-                                                    <p className="text-xs text-gray-600 dark:text-gray-400">{moment(person.dateTime).format("YYYY-MM-DD")}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Link>
+                                    <Post key={person.id} type="person" data={person} />
                                 ))}
                             </div>
                             <div className="p-4 mt-5 bg-white dark:bg-dark rounded-md">
