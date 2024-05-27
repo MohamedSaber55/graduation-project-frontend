@@ -19,6 +19,10 @@ import Person from './pages/Person'
 import Item from './pages/Item'
 import AllItems from './pages/AllItems'
 import AllPersons from './pages/AllPersons'
+import SearchItems from './pages/SearchItems'
+import SearchPersons from './pages/SearchIPersons'
+import Profile from './pages/Profile'
+import Settings from './pages/Settings'
 
 function App() {
 
@@ -31,12 +35,15 @@ function App() {
         { path: "/contact", element: <ProtectedRoutes><Contact /></ProtectedRoutes> },
         { path: "/items", element: <ProtectedRoutes><AllItems /></ProtectedRoutes> },
         { path: "/persons", element: <ProtectedRoutes><AllPersons /></ProtectedRoutes> },
+        { path: "/profile", element: <ProtectedRoutes><Profile /></ProtectedRoutes> },
+        { path: "/settings", element: <ProtectedRoutes><Settings /></ProtectedRoutes> },
         { path: "/post/:postId", element: <ProtectedRoutes><Post /></ProtectedRoutes> },
+        { path: "/search/items/:word", element: <ProtectedRoutes><SearchItems /></ProtectedRoutes> },
+        { path: "/search/persons/:word", element: <ProtectedRoutes><SearchPersons /></ProtectedRoutes> },
         { path: "/person/:personId", element: <ProtectedRoutes><Person /></ProtectedRoutes> },
         { path: "/item/:itemId", element: <ProtectedRoutes><Item /></ProtectedRoutes> },
         { path: "/post/add", element: <ProtectedRoutes><AddPost /></ProtectedRoutes> },
         { path: "/team", element: <ProtectedRoutes><Team /></ProtectedRoutes> },
-        { path: "*", element: <NotFound /> }
       ]
     },
     { path: "/resetpass", element: <ResetPass /> },
@@ -44,7 +51,9 @@ function App() {
     { path: "/forgetpass", element: <ForgetPass /> },
     { path: "/welcome", element: <Welcome /> },
     { path: "/signin", element: <Login /> },
-    { path: "/signup", element: <Register /> },]
+    { path: "/signup", element: <Register /> },
+    { path: "*", element: <NotFound /> }
+  ]
   )
 
   return (

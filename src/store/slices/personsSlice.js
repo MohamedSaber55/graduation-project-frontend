@@ -112,7 +112,6 @@ const personSlice = createSlice({
             })
             .addCase(getAllPersons.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log(action.payload);
                 state.persons = action.payload.data;
             })
             .addCase(getAllPersons.rejected, (state, action) => {
@@ -126,11 +125,13 @@ const personSlice = createSlice({
             })
             .addCase(getAllPersonsSearch.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log(action.payload);
                 state.persons = action.payload.data;
             })
             .addCase(getAllPersonsSearch.rejected, (state, action) => {
                 state.loading = false;
+                if (action.payload.data == null) {
+                    state.persons = []
+                }
                 state.error = action.payload || action.error.message;
             })
             // Get One Person

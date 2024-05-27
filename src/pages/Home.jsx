@@ -1,19 +1,19 @@
 /* eslint-disable no-unused-vars */
-
-import { data } from "./../data/data.json"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from "swiper/modules"
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import moment from "moment";
-import { Link } from "react-router-dom";
-import objectImage from "./../assets/item.png"
+import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select"
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getAllItems } from "../store/slices/itemSlice";
-import { getAllPersons } from "../store/slices/personsSlice";
+import { useEffect, useState } from "react";
+import { getAllItems, getAllItemsSearch } from "../store/slices/itemSlice";
+import { getAllPersons, getAllPersonsSearch } from "../store/slices/personsSlice";
+
 const Home = () => {
+    const [searchText, setSearchText] = useState("")
+    const [searchCategory, setSearchCategory] = useState("")
     const theme = useSelector((state) => state.theme.theme);
     const itemsState = useSelector((state) => state.items);
     const personsState = useSelector((state) => state.persons);
@@ -21,6 +21,7 @@ const Home = () => {
     const items = itemsState?.items
     const persons = personsState?.persons
     const dispatch = useDispatch()
+    const navigate = useNavigate(); // Initialize the navigate function
     useEffect(() => {
         dispatch(getAllItems(authState.token))
         dispatch(getAllPersons(authState.token))
@@ -30,8 +31,21 @@ const Home = () => {
         { value: "item", label: "Item" },
     ];
     const handleChange = (selectedOption) => {
-        console.log("Selected Option:", selectedOption);
+        setSearchCategory(selectedOption.value)
     };
+    const handleSearch = (e) => {
+        e.preventDefault()
+        const params = {
+            name: searchText
+        }
+        if (searchCategory === "item") {
+            // dispatch(getAllItemsSearch({ token: authState.token, params }));
+            navigate(`/search/items/${searchText}`);
+        } else {
+            // dispatch(getAllPersonsSearch({ token: authState.token, params }));
+            navigate(`/search/persons/${searchText}`);
+        }
+    }
     const customStyles = {
         control: (provided, state) => ({
             ...provided,
@@ -76,17 +90,16 @@ const Home = () => {
                     </p>
                 </div>
                 <div className="search-box container bg-white dark:bg-dark p-6 rounded-xl shadow-lg">
-                    <h3 className="text-3xl font-semibold my-5">Search for the lost</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center justify-between gap-5 py-5">
-                        <input type="text" className="rounded-xl border border-main bg-transparent p-2 focus:outline-none" placeholder="Search..." />
+                    <h3 className="text-3xl font-semibold my-5">Search Posts...</h3>
+                    <form onSubmit={e => handleSearch(e)} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-center justify-between gap-5 py-5">
+                        <input onChange={e => setSearchText(e.target.value)} type="text" className="rounded-xl border border-main bg-transparent p-2 focus:outline-none" placeholder="Search..." />
                         <Select styles={customStyles}
                             options={categoryOptions}
                             placeholder="Category"
                             onChange={handleChange}
                         />
-                        <input type="text" className="rounded-xl border border-main bg-transparent p-2 focus:outline-none" placeholder="Address" />
-                        <button className="bg-main hover:bg-second rounded-xl p-2 text-light">Search Now</button>
-                    </div>
+                        <button type='submit' className="bg-main hover:bg-second rounded-xl p-2 text-light">Search Now</button>
+                    </form>
                 </div>
                 <div className="container bg-white dark:bg-dark p-6 rounded-xl shadow-lg my-5">
                     <h3 className="text-3xl md:text-4xl font-semibold my-5 text-center">People</h3>

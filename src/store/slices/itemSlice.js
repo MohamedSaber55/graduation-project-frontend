@@ -19,7 +19,7 @@ export const getAllItems = createAsyncThunk("items/getAll", async (token, { reje
 });
 export const getAllItemsSearch = createAsyncThunk("items/getAllSearch", async ({ token, params }, { rejectWithValue }) => {
     try {
-        console.log({token,params});
+        console.log({ token, params });
         const { data } = await axios.get(`${baseUrl}/Items/search`, {
             headers: {
                 "Authorization": "Bearer " + token
@@ -28,7 +28,6 @@ export const getAllItemsSearch = createAsyncThunk("items/getAllSearch", async ({
         });
         return data;
     } catch (error) {
-        console.log(error.response);
         return rejectWithValue(error.response.data);
     }
 });
@@ -124,10 +123,17 @@ const itemsSlice = createSlice({
             })
             .addCase(getAllItemsSearch.fulfilled, (state, action) => {
                 state.loading = false;
+                console.log(action.payload);
+                if (action.payload.data==null) {
+                    state.items = []
+                }
                 state.items = action.payload.data;
             })
             .addCase(getAllItemsSearch.rejected, (state, action) => {
                 state.loading = false;
+                if (action.payload.data==null) {
+                    state.items = []
+                }
                 state.error = action.payload || action.error.message;
             })
             // Get One Item

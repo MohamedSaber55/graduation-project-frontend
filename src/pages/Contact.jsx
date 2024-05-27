@@ -5,35 +5,36 @@ import { TbLoader } from "react-icons/tb";
 import { motion } from "framer-motion";
 import contactPhoto from "./../assets/contact.jpg";
 import { addComplaint } from "../store/slices/complianSlice";
+import PhoneInput from "react-phone-input-2";
 const Contact = () => {
     const state = useSelector((state) => state.complain);
+    const theme = useSelector((state) => state.theme.theme);
     const dispatch = useDispatch()
     const validationSchema = object({
-        first_name: string()
+        firstName: string()
             .min(2, 'First name must be at least 2 characters')
             .required('First name is required'),
-        last_name: string()
+        lastName: string()
             .min(2, 'Last name must be at least 2 characters')
             .required('Last name is required'),
         // email: string()
         //     .email('Invalid email address')
         //     .matches(/@(gmail|yahoo|outlook)\.com$/, 'Email must be from Gmail or Yahoo or Outlook')
         //     .required('Email is required'),
-        phone: string()
-            .matches(/^(010|011|012|015)\d{8}$/, 'Phone number must be a valid Egyptian mobile number')
+        phoneNumber: string()
             .required('Phone number is required'),
-        message: string()
+        complain: string()
             .max(200, 'Message must be less than 200 characters')
             .required('Message is required'),
     });
 
     const contactForm = useFormik({
         initialValues: {
-            first_name: "",
-            last_name: "",
+            firstName: "",
+            lastName: "",
             // email: "",
-            phone: "",
-            message: "",
+            phoneNumber: "",
+            complain: "",
         },
         validationSchema,
         onSubmit: async (values) => {
@@ -61,45 +62,45 @@ const Contact = () => {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="f-name">
-                                <label htmlFor="first_name" className=" font-bold">
+                                <label htmlFor="firstName" className=" font-bold">
                                     First name
                                 </label>
                                 <input
                                     onBlur={contactForm.handleBlur}
-                                    value={contactForm.values.first_name}
+                                    value={contactForm.values.firstName}
                                     onChange={contactForm.handleChange}
-                                    name="first_name"
+                                    name="firstName"
                                     type="text"
-                                    id="first_name"
+                                    id="firstName"
                                     className="w-full py-3 mt-3 border-main rounded-md px-3 border bg-transparent"
                                     placeholder="First Name"
                                 />
-                                {contactForm.errors.first_name &&
-                                    contactForm.touched.first_name ? (
+                                {contactForm.errors.firstName &&
+                                    contactForm.touched.firstName ? (
                                     <div className=" py-1 text-warning">
-                                        {contactForm.errors.first_name}
+                                        {contactForm.errors.firstName}
                                     </div>
                                 ) : (
                                     ""
                                 )}
                             </div>
-                            <div className="l-name">
-                                <label htmlFor="l_name" className=" font-bold">
+                            <div className="lastName">
+                                <label htmlFor="lastName" className=" font-bold">
                                     Last name
                                 </label>
                                 <input
                                     onBlur={contactForm.handleBlur}
-                                    value={contactForm.values.last_name}
+                                    value={contactForm.values.lastName}
                                     onChange={contactForm.handleChange}
-                                    name="last_name"
+                                    name="lastName"
                                     type="text"
-                                    id="last_name"
+                                    id="lastName"
                                     className="w-full py-3 mt-3 border-main rounded-md px-3 border bg-transparent"
                                     placeholder="Last Name"
                                 />
-                                {contactForm.errors.last_name && contactForm.touched.last_name ? (
+                                {contactForm.errors.lastName && contactForm.touched.lastName ? (
                                     <div className=" py-1 text-warning">
-                                        {contactForm.errors.last_name}
+                                        {contactForm.errors.lastName}
                                     </div>
                                 ) : (
                                     ""
@@ -129,66 +130,67 @@ const Contact = () => {
                                 ""
                             )}
                         </div> */}
-                        <div className="phone">
-                            <label htmlFor="phone" className=" font-bold">
-                                phone
-                            </label>
-                            <input
-                                onBlur={contactForm.handleBlur}
-                                value={contactForm.values.phone}
-                                onChange={contactForm.handleChange}
-                                name="phone"
-                                type="text"
-                                id="phone"
-                                className="w-full py-3 mt-3  border-main rounded-md px-3  border bg-transparent"
-                                placeholder="01** *** ****"
+                        <div className="item space-y-3">
+                            <label htmlFor="phoneNumber" className="font-bold">Phone Number:</label>
+                            <PhoneInput
+                                country={'eg'}
+                                value={contactForm.values.phoneNumber}
+                                onChange={phone => contactForm.setFieldValue('phoneNumber', phone)}
+                                onBlur={() => contactForm.setFieldTouched('phoneNumber', true)}
+                                inputProps={{
+                                    name: 'phoneNumber',
+                                    required: true,
+                                    autoFocus: false,
+                                    className: "p-3 ps-12 rounded-lg border border-main w-full bg-transparent block"
+                                }}
+                                inputStyle={{
+                                    backgroundColor: theme === "dark" ? "#1f293700" : "#f3f4f600",
+                                    color: theme === "dark" ? "#fff" : "#000",
+                                    borderRadius: "6px",
+                                    outline: "none",
+                                    boxShadow: state => state.isFocused ? `0 0 0 1px ${theme === "dark" ? "#E1752C" : "#E1752C"}` : "0 0 0 1px #E1752C"
+                                }}
+                                dropdownStyle={{
+                                    backgroundColor: theme === "dark" ? "#1f2937" : "#f3f4f6",
+                                }}
+                                optionStyle={{
+                                    backgroundColor: theme === "dark" ? "#1f2937" : "#f3f4f6",
+                                    color: theme === "dark" ? "#000" : "#000",
+                                    "&:hover": {
+                                        backgroundColor: theme === "dark" ? "#2d3748" : "#cbd5e0",
+                                        color: "#000",
+                                    },
+                                }}
                             />
-                            {contactForm.errors.phone && contactForm.touched.phone ? (
-                                <div className=" py-1 text-warning">
-                                    {contactForm.errors.phone}
-                                </div>
-                            ) : (
-                                ""
-                            )}
-                        </div>
-                        <div className="message">
-                            <label htmlFor="message" className=" font-bold">
-                                Message
-                            </label>
-                            <textarea
-                                onBlur={contactForm.handleBlur}
-                                value={contactForm.values.message}
-                                onChange={contactForm.handleChange}
-                                cols="10"
-                                rows="7"
-                                name="message"
-                                type="text"
-                                id="message"
-                                className="w-full py-3 mt-3  border-main rounded-md px-3 border bg-transparent"
-                                placeholder="leave us a message"
-                            />
-                            {contactForm.errors.message && contactForm.touched.message ? (
-                                <div className=" py-1 text-warning">
-                                    {contactForm.errors.message}
-                                </div>
-                            ) : (
-                                ""
+                            {contactForm.errors.phoneNumber && contactForm.touched.phoneNumber && (
+                                <div className="text-red-600">{contactForm.errors.phoneNumber}</div>
                             )}
                         </div>
 
-                        {/* <div className="col-span-1 flex gap-2">
-                            <input
-                                name="gender"
-                                value=""
-                                onChange={contactForm.handleChange}
-                                type="checkbox"
-                                id="-input"
-                                className="select-none"
-                            />
-                            <label htmlFor="-input" className="select-none">
-                                You agree to our friendly privacy policy.
+                        <div className="message">
+                            <label htmlFor="complain" className=" font-bold">
+                                Complain
                             </label>
-                        </div> */}
+                            <textarea
+                                onBlur={contactForm.handleBlur}
+                                value={contactForm.values.complain}
+                                onChange={contactForm.handleChange}
+                                cols="10"
+                                rows="7"
+                                name="complain"
+                                type="text"
+                                id="complain"
+                                className="w-full py-3 mt-3  border-main rounded-md px-3 border bg-transparent"
+                                placeholder="leave us a complain"
+                            />
+                            {contactForm.errors.complain && contactForm.touched.complain ? (
+                                <div className=" py-1 text-warning">
+                                    {contactForm.errors.complain}
+                                </div>
+                            ) : (
+                                ""
+                            )}
+                        </div>
 
                         <button
                             disabled={
