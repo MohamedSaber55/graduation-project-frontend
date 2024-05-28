@@ -9,11 +9,14 @@ const AllItems = () => {
     const itemsState = useSelector(state => state.items);
     const authState = useSelector(state => state.user);
     const dispatch = useDispatch();
-    const items = itemsState.items;
+    const items = itemsState.items|| [];
     const isLoading = itemsState.loading;
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(12);
-
+    const [itemsPerPage,setItemsPerPage] = useState(10);
+    const handleItemsPerPageChange = (event) => {
+        setItemsPerPage(parseInt(event.target.value));
+        setCurrentPage(1);
+    };
     useEffect(() => {
         dispatch(getAllItems(authState.token));
     }, [authState.token, dispatch]);
@@ -30,7 +33,7 @@ const AllItems = () => {
     // Pagination
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = items?.slice(indexOfFirstItem, indexOfLastItem);
 
     const paginate = pageNumber => setCurrentPage(pageNumber);
     const nextPage = () => setCurrentPage(prevPage => prevPage + 1);
@@ -71,6 +74,8 @@ const AllItems = () => {
                                     onPageChange={paginate}
                                     onNextPage={nextPage}
                                     onPrevPage={prevPage}
+                                    itemsPerPage={itemsPerPage}
+                                    onItemsPerPageChange={handleItemsPerPageChange}
                                 />
                             </div>
                         </>

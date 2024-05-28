@@ -10,7 +10,6 @@ import { forgetPassword } from '../store/slices/authSlice';
 const ForgetPass = () => {
     const dispatch = useDispatch();
     const state = useSelector(state => state.user);
-    console.log(state);
     const validationSchema = object({
         email: string().email().required('Email is required'),
     });

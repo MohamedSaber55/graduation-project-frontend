@@ -31,7 +31,6 @@ const Register = () => {
         },
         validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
             dispatch(register(values));
         }
     });

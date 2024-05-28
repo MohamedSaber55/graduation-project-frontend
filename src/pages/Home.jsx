@@ -18,8 +18,8 @@ const Home = () => {
     const itemsState = useSelector((state) => state.items);
     const personsState = useSelector((state) => state.persons);
     const authState = useSelector((state) => state.user);
-    const items = itemsState?.items
-    const persons = personsState?.persons
+    const items = itemsState?.items || [];
+    const persons = personsState.persons || [];
     const dispatch = useDispatch()
     const navigate = useNavigate();
     useEffect(() => {
@@ -35,14 +35,9 @@ const Home = () => {
     };
     const handleSearch = (e) => {
         e.preventDefault()
-        const params = {
-            name: searchText
-        }
         if (searchCategory === "item") {
-            // dispatch(getAllItemsSearch({ token: authState.token, params }));
             navigate(`/search/items/${searchText}`);
         } else {
-            // dispatch(getAllPersonsSearch({ token: authState.token, params }));
             navigate(`/search/persons/${searchText}`);
         }
     }

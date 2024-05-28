@@ -14,10 +14,13 @@ const SearchPersons = () => {
     const persons = personsState.persons;
     const isLoading = personsState.loading;
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(12);
     const params = useParams();
     const searchWord = params.word;
-
+    const [personsPerPage,setPersonsPerPage] = useState(10);
+    const handlePersonsPerPageChange = (event) => {
+        setPersonsPerPage(parseInt(event.target.value));
+        setCurrentPage(1);
+    };
     useEffect(() => {
         const params = {
             name: searchWord
@@ -26,8 +29,8 @@ const SearchPersons = () => {
     }, [authState.token, dispatch, searchWord]);
 
     // Pagination
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const indexOfLastItem = currentPage * personsPerPage;
+    const indexOfFirstItem = indexOfLastItem - personsPerPage;
     const currentPersons = persons.slice(indexOfFirstItem, indexOfLastItem);
 
     const paginate = pageNumber => setCurrentPage(pageNumber);
@@ -74,10 +77,12 @@ const SearchPersons = () => {
                             <div className="p-4 mt-5 bg-white dark:bg-dark rounded-md">
                                 <Pagination
                                     currentPage={currentPage}
-                                    totalPageCount={Math.ceil(persons.length / itemsPerPage)}
+                                    totalPageCount={Math.ceil(persons.length / personsPerPage)}
                                     onPageChange={paginate}
                                     onNextPage={nextPage}
                                     onPrevPage={prevPage}
+                                    itemsPerPage={personsPerPage}
+                                    onItemsPerPageChange={handlePersonsPerPageChange}
                                 />
                             </div>
                         </>

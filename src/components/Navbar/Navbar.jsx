@@ -123,6 +123,9 @@ const Navbar = () => {
                                             <div className="nav-dropdown absolute right-0 mt-2 w-48 shadow-lg z-20 border dark:border-gray-600 rounded bg-white dark:bg-dark-light">
                                                 <Link onClick={handleProfileDropdownToggle} to="/profile" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Profile</Link>
                                                 <Link onClick={handleProfileDropdownToggle} to="/settings" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Settings</Link>
+                                                {state.role !== 'admin' && (
+                                                    <Link onClick={handleProfileDropdownToggle} to="/dashboard" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Dashboard</Link>
+                                                )}
                                                 <Link onClick={handleProfileDropdownToggle} to="/post/add" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Add Post</Link>
                                                 <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm hover:bg-main hover:text-white">Logout</button>
                                             </div>
@@ -146,7 +149,7 @@ const Navbar = () => {
                     {state.token && links.map((link, i) => (
                         link.submenu ? (
                             <div key={i}>
-                                <button onClick={handleDropdownToggle} className="font-medium w-full text-start py-2 px-0.5 hover:text-main">
+                                <button onClick={handleDropdownToggle} className="flex items-center font-medium w-full text-start py-2 px-0.5 hover:text-main">
                                     {link.title}
                                     {dropdownOpen ? <FaAngleUp className="ml-1" /> : <FaAngleDown className="ml-1" />}
                                 </button>

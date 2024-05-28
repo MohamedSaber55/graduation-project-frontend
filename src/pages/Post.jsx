@@ -9,7 +9,6 @@ const Post = () => {
     const { postId } = useParams()
     const navigate = useNavigate();
     const post = data.find(item => item.id === parseInt(postId));
-    // console.log(post);
 
     return (
         <div className="bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen">

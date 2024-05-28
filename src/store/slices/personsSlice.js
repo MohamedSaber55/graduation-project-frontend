@@ -27,7 +27,6 @@ export const getAllPersonsSearch = createAsyncThunk("persons/getAllSearch", asyn
         });
         return data;
     } catch (error) {
-        console.log(error.response);
         return rejectWithValue(error.response.data);
     }
 });
@@ -61,11 +60,9 @@ export const addPerson = createAsyncThunk("persons/addOne", async ({ body, token
             }
         });
         notify('Person added successfully', 'success');
-        console.log(data);
         return data;
     } catch (error) {
         notify('Failed to add person', 'error');
-        console.log(error.response);
         return rejectWithValue(error.response.data);
     }
 });
@@ -82,9 +79,13 @@ export const updatePerson = createAsyncThunk("persons/updateOne", async ({ id, p
     }
 });
 
-export const deletePerson = createAsyncThunk("persons/deleteOne", async (id, { rejectWithValue }) => {
+export const deletePerson = createAsyncThunk("persons/deleteOne", async ({ id, token }, { rejectWithValue }) => {
     try {
-        await axios.delete(`${baseUrl}/Persons/${id}`);
+        await axios.delete(`${baseUrl}/Persons/${id}`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
         notify('Person deleted successfully', 'success');
         return id;
     } catch (error) {

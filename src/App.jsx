@@ -1,4 +1,4 @@
-import { RouterProvider, createHashRouter } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Layout from './pages/Layout'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -23,10 +23,16 @@ import SearchItems from './pages/SearchItems'
 import SearchPersons from './pages/SearchIPersons'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
+import Dashboard from './dashboard/Dashboard'
+import DashLayout from './dashboard/DashLayout'
+import Items from './dashboard/Items'
+import Persons from './dashboard/Persons'
+import Complains from './dashboard/Complains'
+import Users from './dashboard/Users'
 
 function App() {
 
-  const routes = createHashRouter(
+  const routes = createBrowserRouter(
     [{
       path: "/", element: <Layout />, children: [
         { index: true, element: <ProtectedRoutes> <Home /></ProtectedRoutes> },
@@ -46,6 +52,15 @@ function App() {
         { path: "/team", element: <ProtectedRoutes><Team /></ProtectedRoutes> },
       ]
     },
+    {
+      path: "/dashboard", element: <DashLayout />, children: [
+        { index: true, element: <ProtectedRoutes><Dashboard /></ProtectedRoutes> },
+        { path: "/dashboard/items", element: <ProtectedRoutes><Items /></ProtectedRoutes> },
+        { path: "/dashboard/persons", element: <ProtectedRoutes><Persons /></ProtectedRoutes> },
+        { path: "/dashboard/complains", element: <ProtectedRoutes><Complains /></ProtectedRoutes> },
+        { path: "/dashboard/users", element: <ProtectedRoutes><Users /></ProtectedRoutes> },
+      ]
+    },
     { path: "/resetpass", element: <ResetPass /> },
     { path: "/verifyOTP", element: <VerifyOTP /> },
     { path: "/forgetpass", element: <ForgetPass /> },
@@ -53,7 +68,7 @@ function App() {
     { path: "/signin", element: <Login /> },
     { path: "/signup", element: <Register /> },
     { path: "*", element: <NotFound /> }
-  ]
+    ]
   )
 
   return (

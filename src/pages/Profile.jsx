@@ -16,10 +16,13 @@ const Profile = () => {
     const loadingItems = itemsState.loading;
     const loadingPersons = personsState.loading;
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(12);
     const items = itemsState.items;
     const persons = personsState.persons;
-
+    const [itemsPerPage,setItemsPerPage] = useState(10);
+    const handleItemsPerPageChange = (event) => {
+        setItemsPerPage(parseInt(event.target.value));
+        setCurrentPage(1);
+    };
     useEffect(() => {
         dispatch(getAllItems(authState.token));
         dispatch(getAllPersons(authState.token));
@@ -78,31 +81,33 @@ const Profile = () => {
 
     return (
         <div className="bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen transition-colors duration-500">
-            <div className="container mx-auto py-5">
-                <div className="userInfo flex flex-col justify-center text-center items-center gap-3">
-                    <div className="image h-28 aspect-square border rounded-full">
-                        <img src={avatar} className="rounded-full w-full" alt="" />
+            <div className="container mx-auto py-5 space-y-5">
+                <div className="bg-white dark:bg-dark p-3 rounded-md">
+                    <div className="userInfo flex flex-col justify-center text-center items-center gap-3">
+                        <div className="image h-28 aspect-square border rounded-full">
+                            <img src={avatar} className="rounded-full w-full" alt="" />
+                        </div>
+                        <div className="info">
+                            <h2 className="text-2xl font-bold">Mohamed Saber</h2>
+                            <p className="text-gray dark:text-gray-light">mohamed.saber.7753@gmail.com</p>
+                        </div>
                     </div>
-                    <div className="info">
-                        <h2 className="text-2xl font-bold">Mohamed Saber</h2>
-                        <p className="text-gray dark:text-gray-light">mohamed.saber.7753@gmail.com</p>
+                    <div className="flex justify-center my-5">
+                        <button
+                            className={`w-48 px-4 py-2 rounded-l-lg ${activeTab === 'persons' ? 'bg-main text-white' : 'bg-white dark:bg-dark text-main border border-main'}`}
+                            onClick={() => handleTabChange('persons')}
+                            style={{ transition: 'background-color 0.3s ease' }}
+                        >
+                            Persons
+                        </button>
+                        <button
+                            className={`w-48 px-4 py-2 rounded-r-lg ${activeTab === 'items' ? 'bg-main text-white' : 'bg-white dark:bg-dark text-main border border-main'}`}
+                            onClick={() => handleTabChange('items')}
+                            style={{ transition: 'background-color 0.3s ease' }}
+                        >
+                            Items
+                        </button>
                     </div>
-                </div>
-                <div className="flex justify-center my-5">
-                    <button
-                        className={`w-48 px-4 py-2 rounded-l-lg ${activeTab === 'persons' ? 'bg-main text-white' : 'bg-white dark:bg-dark text-main border border-main'}`}
-                        onClick={() => handleTabChange('persons')}
-                        style={{ transition: 'background-color 0.3s ease' }}
-                    >
-                        Persons
-                    </button>
-                    <button
-                        className={`w-48 px-4 py-2 rounded-r-lg ${activeTab === 'items' ? 'bg-main text-white' : 'bg-white dark:bg-dark text-main border border-main'}`}
-                        onClick={() => handleTabChange('items')}
-                        style={{ transition: 'background-color 0.3s ease' }}
-                    >
-                        Items
-                    </button>
                 </div>
                 {activeTab === 'persons' ? renderPersons() : renderItems()}
                 <div className="p-4 mt-5 bg-white dark:bg-dark rounded-md">
@@ -112,6 +117,8 @@ const Profile = () => {
                         onPageChange={paginate}
                         onNextPage={nextPage}
                         onPrevPage={prevPage}
+                        itemsPerPage={itemsPerPage}
+                        onItemsPerPageChange={handleItemsPerPageChange}
                     />
                 </div>
             </div>

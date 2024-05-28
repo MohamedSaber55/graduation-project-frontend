@@ -1,0 +1,50 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "../pages/Loading";
+import Table from "../dashComponents/Table";
+import { getAllUsers, getAllUsersSearch } from "../store/slices/authSlice";
+
+const Users = () => {
+    const authState = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    const users = authState.users || [];
+    const isLoading = authState.loading;
+    useEffect(() => {
+        dispatch(getAllUsers(authState.token));
+    }, [authState.token, dispatch]);
+
+    const search = (email) => {
+        const params = { email };
+        if (email) {
+            dispatch(getAllUsersSearch({ token: authState.token, params }));
+        } else {
+            dispatch(getAllUsers(authState.token));
+        }
+    };
+
+    const tableColumns = ["Image", "First Name", "Last Name", "Email", "Role", "Actions"]
+    return (
+        <div className="dashboard-users-page bg-light dark:bg-dark-light text-dark dark:text-light h-full w-full overflow-y-scroll hidden-scrollbar">
+            <div className="container mx-auto p-5">
+                <div className="flex items-center gap-5 flex-wrap justify-between mb-4 bg-white dark:bg-dark p-3 rounded-md">
+                    <h1 className="text-2xl font-semibold">Users</h1>
+                    <div className="w-full sm:w-fit">
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            onChange={e => search(e.target.value)}
+                            className={`px-2 py-2 w-full rounded-lg text-sm bg-transparent border border-main`}
+                        />
+                    </div>
+                </div>
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    <Table data={users} tableName={"users"} tableColumns={tableColumns} />
+                )}
+            </div>
+        </div >
+    )
+}
+
+export default Users

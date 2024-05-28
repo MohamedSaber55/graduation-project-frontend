@@ -6,7 +6,7 @@ import img from "./../assets/Competitive intelligence-pana.png"
 
 const About = () => {
     return (
-        <div className="flex justify-center items-center flex-col min-h-screen bg-light dark:bg-dark-light text-gray-800 dark:text-gray-200 py-10 w-full">
+        <div className="flex justify-center items-center flex-col min-h-screen bg-light dark:bg-dark-light text-gray-800 dark:text-gray-200 py-10 w-full hidden-scrollbar">
             <div className='container rounded-md'>
                 <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">About Our Project</h1>
                 <div className="flex flex-col gap-5">

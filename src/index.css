@@ -11,10 +11,64 @@ body {
 }
 
 
+/* sidebar */
+.sidebar{
+    transition: width 0.3s ease-in-out;
+}
+.side{
+    transition: flex-basis 0.3s ease-in-out;
+}
+
 /* Hide scrollbar for webkit-based browsers */
 .hidden-scrollbar::-webkit-scrollbar {
     display: none;
     /* background-color: aqua; */
+}
+
+/* Custom Scrollbar Styles */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #D1D5DB;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #E1752C;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #d57542;
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Dark Mode Scrollbar */
+.dark-custom-scrollbar::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+.dark-custom-scrollbar::-webkit-scrollbar-track {
+    background: #374151;
+    border-radius: 10px;
+}
+
+.dark-custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #E1752C;
+    border-radius: 10px;
+}
+
+.dark-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #d57542;
+}
+.dark-custom-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 .css-13cymwt-control {
@@ -59,11 +113,12 @@ textarea {
     }
 }
 
-.react-tel-input .country-list .country:hover{
+.react-tel-input .country-list .country:hover {
     color: #000;
     background-color: #9c9c9c;
 }
-.react-tel-input .country-list .country.highlight{
+
+.react-tel-input .country-list .country.highlight {
     color: #000;
     background-color: #9c9c9c;
 

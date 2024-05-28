@@ -14,10 +14,13 @@ const SearchItems = () => {
     const items = itemsState.items;
     const isLoading = itemsState.loading;
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(12);
     const params = useParams();
     const searchWord = params.word;
-
+    const [itemsPerPage,setItemsPerPage] = useState(10);
+    const handleItemsPerPageChange = (event) => {
+        setItemsPerPage(parseInt(event.target.value));
+        setCurrentPage(1);
+    };
     useEffect(() => {
         const params = {
             name: searchWord
@@ -78,6 +81,8 @@ const SearchItems = () => {
                                     onPageChange={paginate}
                                     onNextPage={nextPage}
                                     onPrevPage={prevPage}
+                                    itemsPerPage={itemsPerPage}
+                                    onItemsPerPageChange={handleItemsPerPageChange}
                                 />
                             </div>
                         </>

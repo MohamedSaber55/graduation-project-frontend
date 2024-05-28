@@ -10,10 +10,13 @@ const AllPersons = () => {
     const authState = useSelector(state => state.user);
     const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState(1);
-    const [personsPerPage] = useState(12);
     const persons = personsState.persons;
     const isLoading = personsState.loading;
-
+    const [personsPerPage,setPersonsPerPage] = useState(10);
+    const handlePersonsPerPageChange = (event) => {
+        setPersonsPerPage(parseInt(event.target.value));
+        setCurrentPage(1);
+    };
     useEffect(() => {
         dispatch(getAllPersons(authState.token));
     }, [authState.token, dispatch]);
@@ -71,6 +74,8 @@ const AllPersons = () => {
                                     onPageChange={paginate}
                                     onNextPage={nextPage}
                                     onPrevPage={prevPage}
+                                    itemsPerPage={personsPerPage}
+                                    onItemsPerPageChange={handlePersonsPerPageChange}
                                 />
                             </div>
                         </>

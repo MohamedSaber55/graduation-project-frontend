@@ -11,7 +11,6 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs'
 const ResetPassword = () => {
     const dispatch = useDispatch();
     const state = useSelector(state => state.user);
-    console.log(state);
     const [passType, setPassType] = useState(true)
 
     const validationSchema = object({
@@ -30,7 +29,6 @@ const ResetPassword = () => {
         },
         validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
             dispatch(resetPassword(values));
         }
     });

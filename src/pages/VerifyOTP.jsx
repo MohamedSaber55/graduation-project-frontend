@@ -9,7 +9,6 @@ import { verifyOTP } from '../store/slices/authSlice';
 const VerifyOTP = () => {
     const dispatch = useDispatch();
     const state = useSelector(state => state.user);
-    console.log(state);
     const validationSchema = object({
         otp: string().required('OTP is required'),
         email: string().email().required('Email is required'),
@@ -22,7 +21,6 @@ const VerifyOTP = () => {
         },
         validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
             dispatch(verifyOTP(values));
         }
     });

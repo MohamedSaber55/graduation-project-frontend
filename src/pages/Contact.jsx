@@ -4,8 +4,8 @@ import { useFormik } from "formik";
 import { TbLoader } from "react-icons/tb";
 import { motion } from "framer-motion";
 import contactPhoto from "./../assets/contact.jpg";
-import { addComplaint } from "../store/slices/complianSlice";
 import PhoneInput from "react-phone-input-2";
+import { addComplain } from "../store/slices/complainSlice";
 const Contact = () => {
     const state = useSelector((state) => state.complain);
     const theme = useSelector((state) => state.theme.theme);
@@ -17,13 +17,13 @@ const Contact = () => {
         lastName: string()
             .min(2, 'Last name must be at least 2 characters')
             .required('Last name is required'),
-        // email: string()
-        //     .email('Invalid email address')
-        //     .matches(/@(gmail|yahoo|outlook)\.com$/, 'Email must be from Gmail or Yahoo or Outlook')
-        //     .required('Email is required'),
+        email: string()
+            .email('Invalid email address')
+            .matches(/@(gmail|yahoo|outlook)\.com$/, 'Email must be from Gmail or Yahoo or Outlook')
+            .required('Email is required'),
         phoneNumber: string()
             .required('Phone number is required'),
-        complain: string()
+        complainText: string()
             .max(200, 'Message must be less than 200 characters')
             .required('Message is required'),
     });
@@ -32,14 +32,14 @@ const Contact = () => {
         initialValues: {
             firstName: "",
             lastName: "",
-            // email: "",
+            email: "",
             phoneNumber: "",
-            complain: "",
+            complainText: "",
         },
         validationSchema,
-        onSubmit: async (values) => {
-            console.log(values);
-            dispatch(addComplaint(values))
+        onSubmit: async (values, { resetForm }) => {
+            dispatch(addComplain(values))
+            resetForm()
         },
     });
 
@@ -108,7 +108,7 @@ const Contact = () => {
                             </div>
                         </div>
 
-                        {/* <div className="email">
+                        <div className="email">
                             <label htmlFor="email" className=" font-bold">
                                 Email
                             </label>
@@ -129,7 +129,7 @@ const Contact = () => {
                             ) : (
                                 ""
                             )}
-                        </div> */}
+                        </div>
                         <div className="item space-y-3">
                             <label htmlFor="phoneNumber" className="font-bold">Phone Number:</label>
                             <PhoneInput
@@ -168,24 +168,24 @@ const Contact = () => {
                         </div>
 
                         <div className="message">
-                            <label htmlFor="complain" className=" font-bold">
+                            <label htmlFor="complainText" className=" font-bold">
                                 Complain
                             </label>
                             <textarea
                                 onBlur={contactForm.handleBlur}
-                                value={contactForm.values.complain}
+                                value={contactForm.values.complainText}
                                 onChange={contactForm.handleChange}
                                 cols="10"
                                 rows="7"
-                                name="complain"
+                                name="complainText"
                                 type="text"
-                                id="complain"
+                                id="complainText"
                                 className="w-full py-3 mt-3  border-main rounded-md px-3 border bg-transparent"
-                                placeholder="leave us a complain"
+                                placeholder="leave us a complainText"
                             />
-                            {contactForm.errors.complain && contactForm.touched.complain ? (
+                            {contactForm.errors.complainText && contactForm.touched.complainText ? (
                                 <div className=" py-1 text-warning">
-                                    {contactForm.errors.complain}
+                                    {contactForm.errors.complainText}
                                 </div>
                             ) : (
                                 ""
@@ -194,7 +194,7 @@ const Contact = () => {
 
                         <button
                             disabled={
-                                contactForm.isValid && contactForm.dirty && !state.loading
+                                contactForm.isValid && contactForm.dirty
                                     ? false
                                     : true
                             }

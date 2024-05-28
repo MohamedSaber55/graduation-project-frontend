@@ -8,7 +8,7 @@ const Layout = () => {
         <div>
             <ScrollToTop/>
             <Navbar />
-            <div className="min-h-screen pt-16">
+            <div className="min-h-screen pt-16 hidden-scrollbar">
                 <Outlet></Outlet>
             </div>
             <Footer />

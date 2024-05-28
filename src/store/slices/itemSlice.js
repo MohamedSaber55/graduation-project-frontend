@@ -19,7 +19,6 @@ export const getAllItems = createAsyncThunk("items/getAll", async (token, { reje
 });
 export const getAllItemsSearch = createAsyncThunk("items/getAllSearch", async ({ token, params }, { rejectWithValue }) => {
     try {
-        console.log({ token, params });
         const { data } = await axios.get(`${baseUrl}/Items/search`, {
             headers: {
                 "Authorization": "Bearer " + token
@@ -59,11 +58,9 @@ export const addItem = createAsyncThunk("items/addOne", async ({ body, token }, 
                 "Content-Type": "multipart/form-data",
             }
         });
-        console.log(data);
         notify('Item added successfully', 'success');
         return data;
     } catch (error) {
-        console.log(error.response);
         notify('Failed to add item', 'error');
         return rejectWithValue(error.response.data);
     }
@@ -79,9 +76,13 @@ export const updateItem = createAsyncThunk("items/updateOne", async ({ id, item 
     }
 });
 
-export const deleteItem = createAsyncThunk("items/deleteOne", async (id, { rejectWithValue }) => {
+export const deleteItem = createAsyncThunk("items/deleteOne", async ({ id, token }, { rejectWithValue }) => {
     try {
-        await axios.delete(`${baseUrl}/Items/${id}`);
+        await axios.delete(`${baseUrl}/Items/${id}`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
         notify('Item deleted successfully', 'success');
         return id;
     } catch (error) {
@@ -123,15 +124,14 @@ const itemsSlice = createSlice({
             })
             .addCase(getAllItemsSearch.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log(action.payload);
-                if (action.payload.data==null) {
+                if (action.payload.data == null) {
                     state.items = []
                 }
                 state.items = action.payload.data;
             })
             .addCase(getAllItemsSearch.rejected, (state, action) => {
                 state.loading = false;
-                if (action.payload.data==null) {
+                if (action.payload.data == null) {
                     state.items = []
                 }
                 state.error = action.payload || action.error.message;

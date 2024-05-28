@@ -4,6 +4,52 @@ import { baseUrl } from "../../utils/baseUrl";
 import { toast } from "react-toastify";
 const notify = (msg, type) => toast[type](msg);
 
+
+export const getAllUsers = createAsyncThunk("auth/getAllUsers", async (token) => {
+    try {
+        const { data } = await axios.get(`${baseUrl}/Admin/users`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+        return data;
+    } catch (error) {
+        return error.response.data;
+        // return rejectWithValue(error.response.data);
+    }
+});
+export const getAllUsersSearch = createAsyncThunk("auth/getAllUsersSearch", async ({token,params}) => {
+    try {
+        const { data } = await axios.get(`${baseUrl}/Admin/users/search`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            params
+        });
+        return data;
+    } catch (error) {
+        return error.response.data;
+        // return rejectWithValue(error.response.data);
+    }
+});
+
+export const deleteUser = createAsyncThunk("auth/deleteUser", async (id, token) => {
+    try {
+        const { data } = await axios.delete(`${baseUrl}/Admin/users/${id.id}`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+        notify('User deleted successfully', 'success');
+        getAllUsers(token)
+        return data;
+    } catch (error) {
+        notify('Failed to delete User', 'error');
+        return error.response.data;
+        // return rejectWithValue(error.response.data);
+    }
+});
+
 export const register = createAsyncThunk("auth/register", async (body) => {
     try {
         const { data } = await axios.post(`${baseUrl}/Account/Register`, body);
@@ -76,7 +122,7 @@ export const resetPassword = createAsyncThunk("auth/resetPassword", async (body,
 const initialState = {
     message: "",
     role: "",
-    data: [],
+    users: [],
     loading: false,
     user: null,
     token: localStorage.getItem("trackerToken") || null,
@@ -97,6 +143,49 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(getAllUsers.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getAllUsers.fulfilled, (state, action) => {
+                if (action.payload?.errors?.length > 0) {
+                    state.error = action.payload.errors
+                }
+                if (action.payload == "User with this email already exists.") {
+                    state.error = action.payload
+                }
+                state.loading = false;
+                // state.message = action.payload;
+                state.users = action.payload;
+            })
+            .addCase(getAllUsers.rejected, (state, action) => {
+                state.loading = false;
+                if (action.payload == "User with this email already exists.") {
+                    state.error = action.payload
+                }
+                state.error = action.payload
+            })
+            // -------------------------------------------------------------
+            .addCase(getAllUsersSearch.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getAllUsersSearch.fulfilled, (state, action) => {
+                if (action.payload?.errors?.length > 0) {
+                    state.error = action.payload.errors
+                }
+                state.loading = false;
+                // state.message = action.payload;
+                state.users = action.payload.data;
+            })
+            .addCase(getAllUsersSearch.rejected, (state, action) => {
+                state.loading = false;
+                if (action.payload == "User with this email already exists.") {
+                    state.error = action.payload
+                }
+                state.error = action.payload
+            })
+            // -------------------------------------------------------------
             .addCase(register.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -134,6 +223,7 @@ const authSlice = createSlice({
                 state.user = action.payload.user;
                 state.token = action.payload.token;
                 state.isAuthenticated = true;
+                state.role = action.payload.userRole
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
