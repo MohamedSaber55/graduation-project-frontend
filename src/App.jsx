@@ -29,6 +29,8 @@ import Items from './dashboard/Items'
 import Persons from './dashboard/Persons'
 import Complains from './dashboard/Complains'
 import Users from './dashboard/Users'
+import FaceRecognition from './pages/FaceRecognition'
+import OCRCards from './pages/OCR'
 
 function App() {
 
@@ -38,6 +40,8 @@ function App() {
         { index: true, element: <ProtectedRoutes> <Home /></ProtectedRoutes> },
 
         { path: "/about", element: <ProtectedRoutes> <About /></ProtectedRoutes> },
+        { path: "/faceRecognition", element: <ProtectedRoutes> <FaceRecognition /></ProtectedRoutes> },
+        { path: "/ocr", element: <ProtectedRoutes> <OCRCards /></ProtectedRoutes> },
         { path: "/contact", element: <ProtectedRoutes><Contact /></ProtectedRoutes> },
         { path: "/items", element: <ProtectedRoutes><AllItems /></ProtectedRoutes> },
         { path: "/persons", element: <ProtectedRoutes><AllPersons /></ProtectedRoutes> },
