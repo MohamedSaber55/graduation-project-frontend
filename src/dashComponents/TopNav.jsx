@@ -37,7 +37,7 @@ const TopNav = ({ isOpen, toggleSidebar }) => {
                             {profileDropdownOpen && (
                                 <div className="nav-dropdown absolute right-0 mt-2 w-48 shadow-lg z-20 border dark:border-gray-600 rounded bg-white dark:bg-dark-light">
                                     <Link onClick={handleProfileDropdownToggle} to="/profile" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Profile</Link>
-                                    {state.role !== 'admin' && (
+                                    {state.role == 2 && (
                                         <Link onClick={handleProfileDropdownToggle} to="/" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Website</Link>
                                     )}
                                     <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm hover:bg-main hover:text-white">Logout</button>

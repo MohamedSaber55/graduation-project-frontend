@@ -37,6 +37,7 @@ export const ocr = createAsyncThunk("ocr", async (body, { rejectWithValue }) => 
         }
         return data;
     } catch (error) {
+        console.log(error);
         notify('OCR failed!', 'error');
         return rejectWithValue(error.response.data);
     }

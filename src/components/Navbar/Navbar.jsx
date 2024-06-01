@@ -125,7 +125,7 @@ const Navbar = () => {
                                                 <Link onClick={handleProfileDropdownToggle} to="/settings" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Settings</Link>
                                                 <Link onClick={handleProfileDropdownToggle} to="/faceRecognition" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Find Person by Image</Link>
                                                 <Link onClick={handleProfileDropdownToggle} to="/ocr" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Find Card by Image</Link>
-                                                {state.role !== 'admin' && (
+                                                {state.role == 2 && (
                                                     <Link onClick={handleProfileDropdownToggle} to="/dashboard" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Dashboard</Link>
                                                 )}
                                                 <Link onClick={handleProfileDropdownToggle} to="/post/add" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Add Post</Link>

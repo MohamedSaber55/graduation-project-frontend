@@ -37,7 +37,7 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #E1752C;
+    background: rgb(225, 117, 44);
     border-radius: 10px;
 }
 
@@ -122,4 +122,44 @@ textarea {
     color: #000;
     background-color: #9c9c9c;
 
+}
+
+.person-slide {
+    height: 400px; /* Adjust this height as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.person-slide .post, .person-slide .view-all-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.person-slide .img-box {
+    flex-grow: 1;
+}
+
+.person-slide .data-body {
+    flex-grow: 0;
+}
+
+.view-all-container .img-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0; /* Light background for visual separation */
+}
+
+.view-all-container .bg-gray-300 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.view-all-container .text-2xl {
+    font-size: 1.5rem;
 }

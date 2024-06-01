@@ -18,7 +18,7 @@ export const getAllUsers = createAsyncThunk("auth/getAllUsers", async (token) =>
         // return rejectWithValue(error.response.data);
     }
 });
-export const getAllUsersSearch = createAsyncThunk("auth/getAllUsersSearch", async ({token,params}) => {
+export const getAllUsersSearch = createAsyncThunk("auth/getAllUsersSearch", async ({ token, params }) => {
     try {
         const { data } = await axios.get(`${baseUrl}/Admin/users/search`, {
             headers: {
@@ -56,8 +56,10 @@ export const register = createAsyncThunk("auth/register", async (body) => {
         if (data == "Email verification has been sent to your email successfully. Please verify it!") {
             notify('Now, Check your Email', 'success')
         }
+        console.log(data);
         return data;
     } catch (error) {
+        console.log(error.response);
         return error.response.data;
         // return rejectWithValue(error.response.data);
     }
@@ -69,9 +71,12 @@ export const login = createAsyncThunk("auth/login", async (body) => {
         if (data.token) {
             notify('Logged in', 'success')
         }
+        console.log(data);
         localStorage.setItem("trackerToken", data.token)
+        localStorage.setItem("trackerRole", data.role)
         return data;
     } catch (error) {
+        console.log(error.response);
         return error.response.data;
     }
 });
@@ -121,7 +126,7 @@ export const resetPassword = createAsyncThunk("auth/resetPassword", async (body,
 
 const initialState = {
     message: "",
-    role: "",
+    role: localStorage.getItem("trackerRole") || null,
     users: [],
     loading: false,
     user: null,
@@ -223,7 +228,7 @@ const authSlice = createSlice({
                 state.user = action.payload.user;
                 state.token = action.payload.token;
                 state.isAuthenticated = true;
-                state.role = action.payload.userRole
+                state.role = action.payload.role
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;

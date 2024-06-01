@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from "swiper/modules"
 import 'swiper/css';
 import 'swiper/css/free-mode';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select"
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -136,11 +136,14 @@ const Home = () => {
                                 },
                             }}
                         >
-                            {persons.slice(0, 20)?.map((person, i) => (
+                            {persons.slice(0, 10)?.map((person, i) => (
                                 <SwiperSlide key={i}>
-                                    <Post key={person.id} type="person" data={person} />
+                                    <Post key={person.id} type="person" last={false} data={person} />
                                 </SwiperSlide>
                             ))}
+                            <SwiperSlide className="">
+                                <Post type="person" last={true} data={{}} />
+                            </SwiperSlide>
                         </Swiper>
                     </div>
                 </div>
@@ -194,11 +197,14 @@ const Home = () => {
                                 },
                             }}
                         >
-                            {items.slice(0, 20)?.map((item, i) => (
+                            {items.slice(0, 10)?.map((item, i) => (
                                 <SwiperSlide key={i}>
                                     <Post type="item" data={item} />
                                 </SwiperSlide>
                             ))}
+                            <SwiperSlide className="">
+                                <Post type="item" last={true} data={{}} />
+                            </SwiperSlide>
                         </Swiper>
                     </div>
                 </div>
