@@ -2,16 +2,18 @@ import { useState } from 'react';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { object, ref, string } from 'yup';
+import { mixed, object, ref, string } from 'yup';
 import { useFormik } from 'formik';
 import { TbLoader } from 'react-icons/tb';
 import { motion } from 'framer-motion';
 import { register } from '../store/slices/authSlice';
+import { IoCloudUploadOutline } from 'react-icons/io5';
 
 const Register = () => {
     const [passType, setPassType] = useState(true);
     const state = useSelector(state => state.user);
     const dispatch = useDispatch();
+    const [imagePreview, setImagePreview] = useState(null);
 
     const validationSchema = object({
         firstName: string().required('First name is required'),
@@ -19,6 +21,7 @@ const Register = () => {
         email: string().email('Invalid email address').required('Email is required'),
         password: string().matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,32}$/, 'Password must be 6 to 32 characters long and can contain special characters').required('Password is required'),
         confirmPassword: string().oneOf([ref('password'), null], 'Passwords must match').required('Confirm Password is required'),
+        imageFile: mixed().optional(),
     });
 
     const registerFormik = useFormik({
@@ -28,16 +31,51 @@ const Register = () => {
             email: '',
             password: '',
             confirmPassword: '',
+            imageFile: null,
         },
         validationSchema,
         onSubmit: async (values) => {
-            dispatch(register(values));
+            const result = await dispatch(register(values));
+            if (register.fulfilled.match(result)) {
+                return <Navigate to="/signin" replace={true} />;
+            }
         }
     });
 
-    if (state.message === "Email verification has been sent to your email successfully. Please verify it!") {
-        return <Navigate to="/signin" replace={true} />;
-    }
+    const handleChange = (event) => {
+        const { name, files } = event.target;
+
+        if (name === 'imageFile' && files && files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImagePreview(e.target.result);
+                registerFormik.setFieldValue('imageFile', files[0]);
+            };
+            reader.readAsDataURL(files[0]);
+        }
+    };
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault();
+        const { files } = event.dataTransfer;
+
+        if (files && files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImagePreview(e.target.result);
+                registerFormik.setFieldValue('imageFile', files[0]);
+            };
+            reader.readAsDataURL(files[0]);
+        }
+    };
+
+    // if (state.message === "Email verification has been sent to your email successfully. Please verify it!") {
+    //     return <Navigate to="/signin" replace={true} />;
+    // }
 
     if (state.token) {
         return <Navigate to="/" replace={true} />;
@@ -58,6 +96,38 @@ const Register = () => {
                         <p className='text-sm text-gray-600 dark:text-gray-400'>Please, enter your personal details below.</p>
                     </div>
                     {state.error && <div className='text-sm text-warning text-center'>{state.error}</div>}
+                    <div className="image">
+                        <div className="item space-y-2">
+                            <div className="uploadImage mb-4" onDragOver={handleDragOver} onDrop={handleDrop}>
+                                <label htmlFor="fileInput" className="cursor-pointer block w-full h-64 border rounded-md overflow-hidden bg-white dark:bg-dark border-main">
+                                    {imagePreview ? (
+                                        <div className="text-gray-600 flex items-center justify-center h-64 text-center">
+                                            <img
+                                                src={imagePreview}
+                                                alt="Uploaded Image"
+                                                className="object-cover aspect-video w-fit h-full"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="text-gray-600 flex items-center justify-center h-64 text-center">
+                                            <div className="flex flex-col items-center gap-2">
+                                                <IoCloudUploadOutline className="text-main" size={48} />
+                                                <p className="text-lg font-semibold">Drag & drop your image here or Browse</p>
+                                                <span className="bg-main mt-3 text-lg py-2 px-4 text-white dark:hover:text-light hover:text-dark hover:bg-transparent border border-main rounded-xl duration-150">Upload Image</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </label>
+                                <input
+                                    type="file"
+                                    name="imageFile"
+                                    id="fileInput"
+                                    className="hidden"
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+                    </div>
                     <p className='font-medium text-base'>Enter your name</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="f-name">

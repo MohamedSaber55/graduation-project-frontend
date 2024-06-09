@@ -6,15 +6,21 @@ import { getOneItem } from "../store/slices/itemSlice";
 import moment from "moment";
 import Loading from "./Loading";
 import { CiLink } from "react-icons/ci";
+import CommentList from "../components/CommentList";
+import CommentForm from "../components/CommentForm";
+import { getItemComments } from "../store/slices/itemComments";
 const Item = () => {
     const { itemId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const state = useSelector(state => state.items)
+    const itemCommentsState = useSelector(state => state.itemComments)
     const authState = useSelector(state => state.user)
     const item = state.item
+    console.log(itemCommentsState);
     useEffect(() => {
-        dispatch(getOneItem({ id: itemId, token:authState.token }))
+        dispatch(getOneItem({ id: itemId, token: authState.token }))
+        dispatch(getItemComments(itemId))
     }, [authState.token, dispatch, itemId])
     return (
         <div className="bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen">
@@ -45,6 +51,14 @@ const Item = () => {
                     <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
                         <h3 className="text-main text-2xl font-semibold mb-2">More Details</h3>
                         <p className="text-base leading-loose ">{item.otherDetails || "No more details."}</p>
+                    </div>
+                    <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
+                        <h3 className="text-main text-2xl font-semibold mb-2">Comments</h3>
+                        <CommentList comments={itemCommentsState.comments} />
+                    </div>
+                    <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
+                        <h3 className="text-main text-2xl font-semibold mb-2">Add Comment</h3>
+                        <CommentForm type={"item"} userId={authState.userId} itemId={itemId} />
                     </div>
                 </div></> : <Loading />}
         </div>

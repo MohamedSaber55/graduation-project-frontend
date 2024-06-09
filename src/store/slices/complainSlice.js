@@ -3,13 +3,15 @@ import axios from "axios";
 import { baseUrl } from "../../utils/baseUrl";
 import { toast } from "react-toastify";
 
+const getToken = () => localStorage.getItem("trackerToken");
+
 const notify = (msg, type) => toast[type](msg);
 
 export const getAllComplains = createAsyncThunk("Complains/getAll", async (token, { rejectWithValue }) => {
     try {
         const { data } = await axios.get(`${baseUrl}/Complains`, {
             headers: {
-                "Authorization": "Bearer " + token
+                "Authorization": "Bearer " + token || getToken()
             }
         });
         return data;
@@ -22,7 +24,7 @@ export const getAllComplainsSearch = createAsyncThunk("Complains/getAllSearch", 
     try {
         const { data } = await axios.get(`${baseUrl}/Admin/complaints/search`, {
             headers: {
-                "Authorization": "Bearer " + token
+                "Authorization": "Bearer " + token || getToken()
             },
             params
         });
@@ -43,10 +45,15 @@ export const getOneComplain = createAsyncThunk("Complains/getOne", async (id, { 
 
 export const addComplain = createAsyncThunk("Complains/addOne", async (body, { rejectWithValue }) => {
     try {
-        const { data } = await axios.post(`${baseUrl}/Complains`, body);
+        const { data } = await axios.post(`${baseUrl}/Complains`, body, {
+            headers: {
+                "Authorization": "Bearer " + getToken()
+            }
+        });
         notify('Complain added successfully', 'success');
         return data;
     } catch (error) {
+        console.log(error);
         notify('Failed to add Complain', 'error');
         return rejectWithValue(error.response.data);
     }

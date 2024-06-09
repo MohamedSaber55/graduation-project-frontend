@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaUserCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import DarkBtn from '../components/DarkBtn';
 import { logout } from '../store/slices/authSlice';
 import { TfiClose } from 'react-icons/tfi';
 import { VscMenu } from 'react-icons/vsc';
+import avatar from "./../assets/avatar2.jpg"
 
 // eslint-disable-next-line react/prop-types
 const TopNav = ({ isOpen, toggleSidebar }) => {
@@ -16,6 +16,7 @@ const TopNav = ({ isOpen, toggleSidebar }) => {
     const handleLogout = () => {
         dispatch(logout());
     };
+    const userImage = localStorage.getItem("trackerUserImage")
 
     const handleProfileDropdownToggle = () => {
         setProfileDropdownOpen(!profileDropdownOpen);
@@ -33,7 +34,10 @@ const TopNav = ({ isOpen, toggleSidebar }) => {
                 <div className="flex gap-4 items-center">
                     {state.token && (
                         <div className="relative">
-                            <FaUserCircle size={34} className="cursor-pointer" onClick={handleProfileDropdownToggle} />
+                            <div onClick={handleProfileDropdownToggle} className="image h-10 aspect-square border rounded-full">
+                                <img src={"http://localhost:5097/Resources/" + userImage || avatar} className="rounded-full w-full" alt="" />
+                            </div>
+                            {/* <FaUserCircle size={34} className="cursor-pointer" onClick={handleProfileDropdownToggle} /> */}
                             {profileDropdownOpen && (
                                 <div className="nav-dropdown absolute right-0 mt-2 w-48 shadow-lg z-20 border dark:border-gray-600 rounded bg-white dark:bg-dark-light">
                                     <Link onClick={handleProfileDropdownToggle} to="/profile" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Profile</Link>

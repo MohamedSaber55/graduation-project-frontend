@@ -1,35 +1,53 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { aiBaseUrl } from "../../utils/baseUrl";
+import { ocrBaseUrl, frBaseUrl } from "../../utils/baseUrl";
 import { toast } from "react-toastify";
 
 const notify = (msg, type) => toast[type](msg);
 
-export const faceRecognition = createAsyncThunk("faceRecognition", async (body, { rejectWithValue }) => {
-    try {
-        const formData = new FormData();
-        formData.append('file', body.file);
-        const { data } = await axios.post(`${aiBaseUrl}/fr`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        notify('Face recognition successful!', 'success'); return data;
-    } catch (error) {
-        notify('Face recognition failed!', 'error');
-        return rejectWithValue(error.response.data);
+// export const faceRecognition = createAsyncThunk("faceRecognition", async (body, { rejectWithValue }) => {
+//     try {
+//         const formData = new FormData();
+//         formData.append('file', body.file);
+//         const { data } = await axios.post(`${aiBaseUrl}/fr`, formData, {
+//             headers: {
+//                 'Content-Type': 'multipart/form-data',
+//             },
+//         });
+//         notify('Face recognition successful!', 'success'); return data;
+//     } catch (error) {
+//         notify('Face recognition failed!', 'error');
+//         return rejectWithValue(error.response.data);
+//     }
+// });
+export const faceRecognition = createAsyncThunk(
+    "faceRecognition",
+    async (body, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            formData.append("file", body.file);
+            const { data } = await axios.post(`${frBaseUrl}/classify_face`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            notify("Face recognition successful!", "success");
+            return data;
+        } catch (error) {
+            notify("Face recognition failed!", "error");
+            return rejectWithValue(error.response.data);
+        }
     }
-});
+);
 export const ocr = createAsyncThunk("ocr", async (body, { rejectWithValue }) => {
     try {
         const formData = new FormData();
         formData.append('image', body.file);
-        const { data } = await axios.post(`${aiBaseUrl}/ocr`, formData, {
+        const { data } = await axios.post(`${ocrBaseUrl}/ocr`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(data);
         if (data.error) {
             notify(data.error, 'error');
         } else {
@@ -37,7 +55,6 @@ export const ocr = createAsyncThunk("ocr", async (body, { rejectWithValue }) => 
         }
         return data;
     } catch (error) {
-        console.log(error);
         notify('OCR failed!', 'error');
         return rejectWithValue(error.response.data);
     }
@@ -65,11 +82,11 @@ const aiSlice = createSlice({
             })
             .addCase(faceRecognition.fulfilled, (state, action) => {
                 state.loading = false;
-                state.personsData = action.payload.prediction
+                state.personsData = action.payload.face_names;
             })
             .addCase(faceRecognition.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload.error;
+                state.error = action.payload;
             })
             // ocr-----------------------------------------
             .addCase(ocr.pending, (state) => {

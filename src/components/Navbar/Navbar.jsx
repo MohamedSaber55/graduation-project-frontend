@@ -2,11 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { TfiClose } from 'react-icons/tfi';
 import { VscMenu } from "react-icons/vsc";
 import { Link } from "react-router-dom";
-import { FaAngleDown, FaAngleUp, FaUserCircle } from 'react-icons/fa';
-import logo from "./../../assets/logo.png";
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+// import logo from "./../../assets/logo.png";
 import DarkBtn from "../DarkBtn";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
+import avatar from "./../../assets/avatar2.jpg"
 
 const links = [
     { title: "Home", to: "/" },
@@ -31,6 +32,7 @@ const Navbar = () => {
     const navbarRef = useRef(null);
     const state = useSelector(state => state.user);
 
+    const userImage = localStorage.getItem("trackerUserImage")
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY >= 64) {
@@ -85,8 +87,9 @@ const Navbar = () => {
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="flex flex-1 items-center justify-between md:items-stretch">
                         <div className="flex items-center">
-                            <Link to="/">
-                                <img src={logo} className="h-12" alt="Logo" />
+                            <Link to="/" className="flex gap- items-center">
+                                <img src={"/logo.png"} className="h-16" alt="Logo" />
+                                <h1 className="text-main font-bold text-3xl">Tracker</h1>
                             </Link>
                         </div>
                         <div className="hidden md:flex gap-4 items-center">
@@ -118,13 +121,16 @@ const Navbar = () => {
                             <div className="flex gap-4 items-center">
                                 {state.token && (
                                     <div className="relative">
-                                        <FaUserCircle size={34} className="cursor-pointer" onClick={handleProfileDropdownToggle} />
+                                        <div onClick={handleProfileDropdownToggle} className="image h-10 aspect-square border rounded-full">
+                                            <img src={"http://localhost:5097/Resources/" + userImage || avatar} className="rounded-full w-full" alt="" />
+                                        </div>
+                                        {/* <FaUserCircle size={34} className="cursor-pointer" onClick={handleProfileDropdownToggle} /> */}
                                         {profileDropdownOpen && (
                                             <div className="nav-dropdown absolute right-0 mt-2 w-48 shadow-lg z-20 border dark:border-gray-600 rounded bg-white dark:bg-dark-light">
                                                 <Link onClick={handleProfileDropdownToggle} to="/profile" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Profile</Link>
                                                 <Link onClick={handleProfileDropdownToggle} to="/settings" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Settings</Link>
-                                                <Link onClick={handleProfileDropdownToggle} to="/faceRecognition" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Find Person by Image</Link>
-                                                <Link onClick={handleProfileDropdownToggle} to="/ocr" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Find Card by Image</Link>
+                                                <Link onClick={handleProfileDropdownToggle} to="/faceRecognition" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Find Persons by Image</Link>
+                                                <Link onClick={handleProfileDropdownToggle} to="/ocr" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Find Objects by Image</Link>
                                                 {state.role == 2 && (
                                                     <Link onClick={handleProfileDropdownToggle} to="/dashboard" className="block px-4 py-2 text-sm hover:bg-main hover:text-white">Dashboard</Link>
                                                 )}

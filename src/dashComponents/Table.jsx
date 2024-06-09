@@ -20,7 +20,6 @@ const Table = ({ data, tableColumns, tableName }) => {
         setItemsPerPage(parseInt(event.target.value));
         setCurrentPage(1);
     };
-
     // Pagination
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -149,7 +148,7 @@ const Table = ({ data, tableColumns, tableName }) => {
                                     <td className="py-2 px-4 border-b dark:border-gray-600">
                                         <a href={`mailto:${item.email}`} className="hover:underline">{item.email}</a>
                                     </td>
-                                    <td className="py-2 px-4 border-b dark:border-gray-600">Admin</td>
+                                    <td className="py-2 px-4 border-b dark:border-gray-600">{item.userRole == 1 ? "User" : item.userRole == 2 ? "Admin" : null}</td>
                                     <td className="py-2 px-4 border-b dark:border-gray-600">
                                         <button onClick={() => handleDeleteItem(item.id, "user")} className="text-red-500 hover:text-red-700">
                                             <FaTrashAlt />

@@ -3,11 +3,12 @@ import axios from "axios";
 import { baseUrl } from "../../utils/baseUrl";
 import { toast } from "react-toastify";
 const notify = (msg, type) => toast[type](msg);
-
-
+const getUserId = () => localStorage.getItem("trackerUserId");
+const getToken = () => localStorage.getItem("trackerToken");
+const user = getUserId()
 export const getAllItems = createAsyncThunk("items/getAll", async (token, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${baseUrl}/Items`, {
+        const { data } = await axios.get(`${baseUrl}/Items/items`, {
             headers: {
                 "Authorization": `Bearer ${token}`,
             }
@@ -19,7 +20,7 @@ export const getAllItems = createAsyncThunk("items/getAll", async (token, { reje
 });
 export const getAllItemsSearch = createAsyncThunk("items/getAllSearch", async ({ token, params }, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${baseUrl}/Items/search`, {
+        const { data } = await axios.get(`${baseUrl}/Items/items/search`, {
             headers: {
                 "Authorization": "Bearer " + token
             },
@@ -32,7 +33,7 @@ export const getAllItemsSearch = createAsyncThunk("items/getAllSearch", async ({
 });
 export const getOneItem = createAsyncThunk("items/getOne", async ({ id, token }, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${baseUrl}/Items/${id}`, {
+        const { data } = await axios.get(`${baseUrl}/Items/items/${id}`, {
             headers: {
                 "Authorization": `Bearer ${token}`,
             }
@@ -43,16 +44,15 @@ export const getOneItem = createAsyncThunk("items/getOne", async ({ id, token },
     }
 });
 
-export const addItem = createAsyncThunk("items/addOne", async ({ body, token }, { rejectWithValue }) => {
+export const addItem = createAsyncThunk("items/addOne", async ({ body, token, userId }, { rejectWithValue }) => {
     try {
         const formData = new FormData();
 
-        // Append each field from body to the FormData object
         Object.keys(body).forEach(key => {
             formData.append(key, body[key]);
         });
 
-        const { data } = await axios.post(`${baseUrl}/Items`, formData, {
+        const { data } = await axios.post(`${baseUrl}/Items/${userId || user}/items`, formData, {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "multipart/form-data",
@@ -65,9 +65,21 @@ export const addItem = createAsyncThunk("items/addOne", async ({ body, token }, 
         return rejectWithValue(error.response.data);
     }
 });
-export const updateItem = createAsyncThunk("items/updateOne", async ({ id, item }, { rejectWithValue }) => {
+export const getUserItems = createAsyncThunk("items/getUserItems", async ({ token, userId }, { rejectWithValue }) => {
     try {
-        const { data } = await axios.put(`${baseUrl}/Items/${id}`, item);
+        const { data } = await axios.get(`${baseUrl}/Items/${userId || user}/items`, {
+            headers: {
+                "Authorization": `Bearer ${token || getToken()}`,
+            }
+        });
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});
+export const updateItem = createAsyncThunk("items/updateOne", async ({ id, item, userId }, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.put(`${baseUrl}/Items/${userId || user}/items/${id}`, item);
         notify('Item updated successfully', 'success');
         return data;
     } catch (error) {
@@ -76,9 +88,9 @@ export const updateItem = createAsyncThunk("items/updateOne", async ({ id, item 
     }
 });
 
-export const deleteItem = createAsyncThunk("items/deleteOne", async ({ id, token }, { rejectWithValue }) => {
+export const deleteItem = createAsyncThunk("items/deleteOne", async ({ id, token, userId }, { rejectWithValue }) => {
     try {
-        await axios.delete(`${baseUrl}/Items/${id}`, {
+        await axios.delete(`${baseUrl}/Items/${userId || user}/items/${id}`, {
             headers: {
                 "Authorization": "Bearer " + token
             }
@@ -114,6 +126,19 @@ const itemsSlice = createSlice({
                 state.items = action.payload.data;
             })
             .addCase(getAllItems.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || action.error.message;
+            })
+            // Get All Items
+            .addCase(getUserItems.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getUserItems.fulfilled, (state, action) => {
+                state.loading = false;
+                state.items = action.payload.data;
+            })
+            .addCase(getUserItems.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || action.error.message;
             })

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Pagination from '../components/Pagination';
 import Loading from './Loading';
-import { getAllItems } from '../store/slices/itemSlice';
-import { getAllPersons } from '../store/slices/personsSlice';
+import { getUserPersons } from '../store/slices/personsSlice';
+import { getUserItems } from '../store/slices/itemSlice';
 import avatar from "./../assets/IMG_20240504_113453.png";
 import Post from '../components/Post';
 
@@ -18,15 +18,21 @@ const Profile = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const items = itemsState.items;
     const persons = personsState.persons;
-    const [itemsPerPage,setItemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const handleItemsPerPageChange = (event) => {
         setItemsPerPage(parseInt(event.target.value));
         setCurrentPage(1);
     };
     useEffect(() => {
-        dispatch(getAllItems(authState.token));
-        dispatch(getAllPersons(authState.token));
+        dispatch(getUserItems({ token: authState.token}));
+        dispatch(getUserPersons({ token: authState.token }));
     }, [authState.token, dispatch]);
+
+
+    const userImage = localStorage.getItem("trackerUserImage")
+    const userFName = localStorage.getItem("trackerUserFName")
+    const userLName = localStorage.getItem("trackerUserLName")
+    const userEmail = localStorage.getItem("trackerUserEmail")
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
@@ -85,11 +91,11 @@ const Profile = () => {
                 <div className="bg-white dark:bg-dark p-3 rounded-md">
                     <div className="userInfo flex flex-col justify-center text-center items-center gap-3">
                         <div className="image h-28 aspect-square border rounded-full">
-                            <img src={avatar} className="rounded-full w-full" alt="" />
+                            <img src={"http://localhost:5097/Resources/" + userImage || avatar} className="rounded-full w-full" alt="" />
                         </div>
                         <div className="info">
-                            <h2 className="text-2xl font-bold">Mohamed Saber</h2>
-                            <p className="text-gray dark:text-gray-light">mohamed.saber.7753@gmail.com</p>
+                            <h2 className="text-2xl font-bold">{userFName + " " + userLName}</h2>
+                            <p className="text-gray dark:text-gray-light">{userEmail}</p>
                         </div>
                     </div>
                     <div className="flex justify-center my-5">

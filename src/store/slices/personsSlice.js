@@ -2,12 +2,25 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseUrl } from "../../utils/baseUrl";
 import { toast } from "react-toastify";
+const user = localStorage.getItem("trackerUserId")
 
 const notify = (msg, type) => toast[type](msg);
 
 export const getAllPersons = createAsyncThunk("persons/getAll", async (token, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${baseUrl}/Persons`, {
+        const { data } = await axios.get(`${baseUrl}/Persons/persons`, {
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+        });
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});
+export const getUserPersons = createAsyncThunk("persons/getUserPersons", async ({ token, userId }, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get(`${baseUrl}/Persons/${userId || user}/persons`, {
             headers: {
                 "Authorization": "Bearer " + token
             },
@@ -19,7 +32,7 @@ export const getAllPersons = createAsyncThunk("persons/getAll", async (token, { 
 });
 export const getAllPersonsSearch = createAsyncThunk("persons/getAllSearch", async ({ token, params }, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${baseUrl}/Persons/search`, {
+        const { data } = await axios.get(`${baseUrl}/Persons/persons/search`, {
             headers: {
                 "Authorization": "Bearer " + token
             },
@@ -33,7 +46,7 @@ export const getAllPersonsSearch = createAsyncThunk("persons/getAllSearch", asyn
 
 export const getOnePerson = createAsyncThunk("persons/getOne", async ({ id, token }, { rejectWithValue }) => {
     try {
-        const { data } = await axios.get(`${baseUrl}/Persons/${id}`, {
+        const { data } = await axios.get(`${baseUrl}/Persons/persons/${id}`, {
             headers: {
                 "Authorization": "Bearer " + token
             }
@@ -44,7 +57,7 @@ export const getOnePerson = createAsyncThunk("persons/getOne", async ({ id, toke
     }
 });
 
-export const addPerson = createAsyncThunk("persons/addOne", async ({ body, token }, { rejectWithValue }) => {
+export const addPerson = createAsyncThunk("persons/addOne", async ({ body, token, userId }, { rejectWithValue }) => {
     try {
         const formData = new FormData();
 
@@ -53,7 +66,7 @@ export const addPerson = createAsyncThunk("persons/addOne", async ({ body, token
             formData.append(key, value);
         });
 
-        const { data } = await axios.post(`${baseUrl}/Persons`, formData, {
+        const { data } = await axios.post(`${baseUrl}/Persons/${userId || user}/persons`, formData, {
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "multipart/form-data",
@@ -68,9 +81,9 @@ export const addPerson = createAsyncThunk("persons/addOne", async ({ body, token
 });
 
 
-export const updatePerson = createAsyncThunk("persons/updateOne", async ({ id, person }, { rejectWithValue }) => {
+export const updatePerson = createAsyncThunk("persons/updateOne", async ({ id, person, userId }, { rejectWithValue }) => {
     try {
-        const { data } = await axios.put(`${baseUrl}/Persons/${id}`, person);
+        const { data } = await axios.put(`${baseUrl}/Persons/${userId || user}/persons/${id}`, person);
         notify('Person updated successfully', 'success');
         return data;
     } catch (error) {
@@ -79,9 +92,9 @@ export const updatePerson = createAsyncThunk("persons/updateOne", async ({ id, p
     }
 });
 
-export const deletePerson = createAsyncThunk("persons/deleteOne", async ({ id, token }, { rejectWithValue }) => {
+export const deletePerson = createAsyncThunk("persons/deleteOne", async ({ id, token, userId }, { rejectWithValue }) => {
     try {
-        await axios.delete(`${baseUrl}/Persons/${id}`, {
+        await axios.delete(`${baseUrl}/Persons/${userId || user}/persons/${id}`, {
             headers: {
                 "Authorization": "Bearer " + token
             }
@@ -116,6 +129,19 @@ const personSlice = createSlice({
                 state.persons = action.payload.data;
             })
             .addCase(getAllPersons.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || action.error.message;
+            })
+            // Get All Persons
+            .addCase(getUserPersons.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getUserPersons.fulfilled, (state, action) => {
+                state.loading = false;
+                state.persons = action.payload.data;
+            })
+            .addCase(getUserPersons.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || action.error.message;
             })

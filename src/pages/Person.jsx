@@ -6,6 +6,9 @@ import Loading from "./Loading";
 import { CiLink } from "react-icons/ci";
 import { getOnePerson } from "../store/slices/personsSlice";
 import moment from "moment";
+import CommentList from "../components/CommentList";
+import CommentForm from "../components/CommentForm";
+import { getPersonComments } from "../store/slices/personComments";
 
 const Person = () => {
     const { personId } = useParams();
@@ -13,10 +16,12 @@ const Person = () => {
     const navigate = useNavigate();
     const state = useSelector(state => state.persons);
     const authState = useSelector(state => state.user)
+    const personCommentsState = useSelector(state => state.personComments)
     const person = state.person;
 
     useEffect(() => {
         dispatch(getOnePerson({ id: personId, token: authState.token }));
+        dispatch(getPersonComments(personId));
     }, [authState.token, dispatch, personId]);
 
     return (
@@ -92,6 +97,14 @@ const Person = () => {
                     <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
                         <h3 className="text-main text-2xl font-semibold mb-2">More Details</h3>
                         <p className="text-base leading-loose ">{person.otherDetails || "No more details."}</p>
+                    </div>
+                    <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
+                        <h3 className="text-main text-2xl font-semibold mb-2">Comments</h3>
+                        <CommentList comments={personCommentsState.comments} />
+                    </div>
+                    <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
+                        <h3 className="text-main text-2xl font-semibold mb-2">Add Comment</h3>
+                        <CommentForm type={"person"} userId={authState.userId} itemId={personId} />
                     </div>
                 </div>
             ) : (

@@ -4,7 +4,9 @@ import { baseUrl } from "../../utils/baseUrl";
 import { toast } from "react-toastify";
 const notify = (msg, type) => toast[type](msg);
 
-
+const getUserId = () => localStorage.getItem("trackerUserId")
+const getToken = () => localStorage.getItem("trackerToken")
+const user = getUserId
 export const getAllUsers = createAsyncThunk("auth/getAllUsers", async (token) => {
     try {
         const { data } = await axios.get(`${baseUrl}/Admin/users`, {
@@ -52,31 +54,47 @@ export const deleteUser = createAsyncThunk("auth/deleteUser", async (id, token) 
 
 export const register = createAsyncThunk("auth/register", async (body) => {
     try {
-        const { data } = await axios.post(`${baseUrl}/Account/Register`, body);
-        if (data == "Email verification has been sent to your email successfully. Please verify it!") {
-            notify('Now, Check your Email', 'success')
-        }
+        // Create a new FormData object
+        const formData = new FormData();
+
+        // Append each property of the body to the FormData object
+        Object.keys(body).forEach(key => {
+            formData.append(key, body[key]);
+        });
+
+        const { data } = await axios.post(`${baseUrl}/Account/Register`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        });
         console.log(data);
+        if (data.data === "Email verification has been sent to your email successfully. Please verify it!") {
+            notify('Now, Check your Email', 'success');
+        }
+
         return data;
     } catch (error) {
         console.log(error.response);
         return error.response.data;
+        // If you want to use rejectWithValue, you need to pass it as a second parameter to the async function
         // return rejectWithValue(error.response.data);
     }
 });
-
 export const login = createAsyncThunk("auth/login", async (body) => {
     try {
         const { data } = await axios.post(`${baseUrl}/Account/login`, body);
         if (data.token) {
             notify('Logged in', 'success')
         }
-        console.log(data);
         localStorage.setItem("trackerToken", data.token)
         localStorage.setItem("trackerRole", data.role)
+        localStorage.setItem("trackerUserId", data.id)
+        localStorage.setItem("trackerUserImage", data.image)
+        localStorage.setItem("trackerUserFName", data.firstName)
+        localStorage.setItem("trackerUserLName", data.lastName)
+        localStorage.setItem("trackerUserEmail", data.email)
         return data;
     } catch (error) {
-        console.log(error.response);
         return error.response.data;
     }
 });
@@ -123,6 +141,28 @@ export const resetPassword = createAsyncThunk("auth/resetPassword", async (body,
     }
 });
 
+export const updateProfile = createAsyncThunk("user/update", async ({ body, userId, token }, { rejectWithValue }) => {
+    try {
+        // Create a FormData object and append the body properties
+        const formData = new FormData();
+        for (const key in body) {
+            formData.append(key, body[key]);
+        }
+
+        // Make the PUT request with multipart/form-data
+        const { data } = await axios.put(`${baseUrl}/User/users/${userId || user}`, formData, {
+            headers: {
+                "Authorization": "Bearer " + (token || getToken()),
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.log(error.response);
+        return rejectWithValue(error.response.data);
+    }
+});
 
 const initialState = {
     message: "",
@@ -131,6 +171,7 @@ const initialState = {
     loading: false,
     user: null,
     token: localStorage.getItem("trackerToken") || null,
+    userId: localStorage.getItem("trackerUserId") || null,
     isAuthenticated: false,
     error: null,
 };
@@ -203,7 +244,7 @@ const authSlice = createSlice({
                     state.error = action.payload
                 }
                 state.loading = false;
-                state.message = action.payload;
+                state.message = action.payload.data;
                 state.user = action.payload.user;
                 state.token = localStorage.getItem("trackerToken") || action.payload.token;
                 state.isAuthenticated = true;
@@ -227,6 +268,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.user;
                 state.token = action.payload.token;
+                state.userId = action.payload.id;
                 state.isAuthenticated = true;
                 state.role = action.payload.role
             })
