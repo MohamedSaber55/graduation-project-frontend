@@ -8,12 +8,16 @@ import { TbLoader } from 'react-icons/tb';
 import { motion } from 'framer-motion';
 import { register } from '../store/slices/authSlice';
 import { IoCloudUploadOutline } from 'react-icons/io5';
+import { TiTick } from 'react-icons/ti';
 
 const Register = () => {
     const [passType, setPassType] = useState(true);
     const state = useSelector(state => state.user);
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(null);
+    const steps = ["Main Details", "Choose Image"]
+    const [currentStep, setCurrentStep] = useState(1)
+    const [completed, setCompleted] = useState(false)
 
     const validationSchema = object({
         firstName: string().required('First name is required'),
@@ -73,9 +77,9 @@ const Register = () => {
         }
     };
 
-    // if (state.message === "Email verification has been sent to your email successfully. Please verify it!") {
-    //     return <Navigate to="/signin" replace={true} />;
-    // }
+    if (state.message === "Email verification has been sent to your email successfully. Please verify it!") {
+        return <Navigate to="/signin" replace={true} />;
+    }
 
     if (state.token) {
         return <Navigate to="/" replace={true} />;
@@ -96,147 +100,173 @@ const Register = () => {
                         <p className='text-sm text-gray-600 dark:text-gray-400'>Please, enter your personal details below.</p>
                     </div>
                     {state.error && <div className='text-sm text-warning text-center'>{state.error}</div>}
-                    <div className="image">
-                        <div className="item space-y-2">
-                            <div className="uploadImage mb-4" onDragOver={handleDragOver} onDrop={handleDrop}>
-                                <label htmlFor="fileInput" className="cursor-pointer block w-full h-64 border rounded-md overflow-hidden bg-white dark:bg-dark border-main">
-                                    {imagePreview ? (
-                                        <div className="text-gray-600 flex items-center justify-center h-64 text-center">
-                                            <img
-                                                src={imagePreview}
-                                                alt="Uploaded Image"
-                                                className="object-cover aspect-video w-fit h-full"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <div className="text-gray-600 flex items-center justify-center h-64 text-center">
-                                            <div className="flex flex-col items-center gap-2">
-                                                <IoCloudUploadOutline className="text-main" size={48} />
-                                                <p className="text-lg font-semibold">Drag & drop your image here or Browse</p>
-                                                <span className="bg-main mt-3 text-lg py-2 px-4 text-white dark:hover:text-light hover:text-dark hover:bg-transparent border border-main rounded-xl duration-150">Upload Image</span>
+                    <div className="flex justify-center gap-7">
+                        {steps?.map((step, i) => (
+                            <div key={i} onClick={() => setCurrentStep(i + 1)} className={`step-item  ${currentStep === i + 1 && "active"} ${(i + 1 < currentStep || completed) && "complete"}`}>
+                                <div className="step cursor-pointer">{(i + 1 < currentStep || completed) ? <TiTick size={24} /> : i + 1}</div>
+                                <p className="text-wrap">{step}</p>
+                            </div>
+                        ))}
+                    </div>
+                    {currentStep === 1 && <>
+                        <p className='font-medium text-base'>Enter your name</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div className="f-name">
+                                <input
+                                    onBlur={registerFormik.handleBlur}
+                                    value={registerFormik.values.firstName}
+                                    onChange={registerFormik.handleChange}
+                                    name='firstName'
+                                    type="text"
+                                    id='firstName'
+                                    className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
+                                    placeholder="First Name"
+                                />
+                                {registerFormik.errors.firstName && registerFormik.touched.firstName ? (
+                                    <div className="py-1 text-warning">{registerFormik.errors.firstName}</div>
+                                ) : null}
+                            </div>
+                            <div className="l-name">
+                                <input
+                                    onBlur={registerFormik.handleBlur}
+                                    value={registerFormik.values.lastName}
+                                    onChange={registerFormik.handleChange}
+                                    name='lastName'
+                                    type="text"
+                                    id='lastName'
+                                    className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
+                                    placeholder="Last Name"
+                                />
+                                {registerFormik.errors.lastName && registerFormik.touched.lastName ? (
+                                    <div className="py-1 text-warning">{registerFormik.errors.lastName}</div>
+                                ) : null}
+                            </div>
+                        </div>
+                        <p className='font-medium text-base pt-4'>Enter your email</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-1 gap-5">
+                            <div className="email">
+                                <input
+                                    onBlur={registerFormik.handleBlur}
+                                    value={registerFormik.values.email}
+                                    onChange={registerFormik.handleChange}
+                                    name='email'
+                                    type="email"
+                                    id='email'
+                                    className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
+                                    placeholder="Email"
+                                />
+                                {registerFormik.errors.email && registerFormik.touched.email ? (
+                                    <div className="py-1 text-warning">{registerFormik.errors.email}</div>
+                                ) : null}
+                            </div>
+                        </div>
+                        <p className='font-medium text-base pt-4'>Enter your Password</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-1 gap-5">
+                            <div className="pass">
+                                <div className="w-full relative">
+                                    <input
+                                        onBlur={registerFormik.handleBlur}
+                                        value={registerFormik.values.password}
+                                        onChange={registerFormik.handleChange}
+                                        id='password'
+                                        name='password'
+                                        type={passType ? "password" : "text"}
+                                        className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
+                                        placeholder="Enter your password"
+                                    />
+                                    <button
+                                        type='button'
+                                        className='absolute right-2 top-1/2 -translate-y-1/2 hover:text-main'
+                                        onClick={() => setPassType(!passType)}
+                                    >
+                                        {passType ? <BsEye /> : <BsEyeSlash />}
+                                    </button>
+                                </div>
+                                {registerFormik.errors.password && registerFormik.touched.password ? (
+                                    <div className="py-1 text-warning">{registerFormik.errors.password}</div>
+                                ) : null}
+                            </div>
+                            <div className="c-pass">
+                                <div className="w-full relative">
+                                    <input
+                                        onBlur={registerFormik.handleBlur}
+                                        value={registerFormik.values.confirmPassword}
+                                        onChange={registerFormik.handleChange}
+                                        id='confirmPassword'
+                                        name='confirmPassword'
+                                        type={passType ? "password" : "text"}
+                                        className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
+                                        placeholder="Confirm password"
+                                    />
+                                    <button
+                                        type='button'
+                                        className='absolute right-2 top-1/2 -translate-y-1/2 hover:text-main'
+                                        onClick={() => setPassType(!passType)}
+                                    >
+                                        {passType ? <BsEye /> : <BsEyeSlash />}
+                                    </button>
+                                </div>
+                                {registerFormik.errors.confirmPassword && registerFormik.touched.confirmPassword ? (
+                                    <div className="py-1 text-warning">{registerFormik.errors.confirmPassword}</div>
+                                ) : null}
+                            </div>
+                        </div></>}
+                    {currentStep === 2 && <>
+                        <div className="image">
+                            <div className="item space-y-2">
+                                <div className="uploadImage mb-4" onDragOver={handleDragOver} onDrop={handleDrop}>
+                                    <label htmlFor="fileInput" className="cursor-pointer block w-full h-64 border rounded-md overflow-hidden bg-white dark:bg-dark border-main">
+                                        {imagePreview ? (
+                                            <div className="text-gray-600 flex items-center justify-center h-64 text-center">
+                                                <img
+                                                    src={imagePreview}
+                                                    alt="Uploaded Image"
+                                                    className="object-cover aspect-video w-fit h-full"
+                                                />
                                             </div>
-                                        </div>
-                                    )}
-                                </label>
-                                <input
-                                    type="file"
-                                    name="imageFile"
-                                    id="fileInput"
-                                    className="hidden"
-                                    onChange={handleChange}
-                                />
+                                        ) : (
+                                            <div className="text-gray-600 flex items-center justify-center h-64 text-center">
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <IoCloudUploadOutline className="text-main" size={48} />
+                                                    <p className="text-lg font-semibold">Drag & drop your image here or Browse</p>
+                                                    <span className="bg-main mt-3 text-lg py-2 px-4 text-white dark:hover:text-light hover:text-dark hover:bg-transparent border border-main rounded-xl duration-150">Upload Image</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </label>
+                                    <input
+                                        type="file"
+                                        name="imageFile"
+                                        id="fileInput"
+                                        className="hidden"
+                                        onChange={handleChange}
+                                    />
+                                </div>
                             </div>
                         </div>
+                    </>}
+                    <div className="buttons flex gap-4 justify-start mt-5">
+                        <button onClick={(e) => {
+                            e.preventDefault()
+                            currentStep <= 1 ? setCompleted(false) : setCurrentStep((prev) => prev - 1);
+                        }
+                        } className={`p-3 w-56 m-auto text-sm bg-gradient-to-l ${currentStep > 1 ? "hover:from-transparent hover:text-main from-main to-second border-main ":"cursor-default to-brown from-brown border-brown "}  text-white rounded-3xl border uppercase font-medium  duration-150 flex justify-center`}>
+                            {currentStep >= 1 ? "Previous" : "Next"}
+                        </button>
+                        {currentStep !== steps?.length ? <button onClick={(e) => {
+                            e.preventDefault()
+                            currentStep === steps?.length ? setCompleted(true) : setCurrentStep((prev) => prev + 1);
+                        }
+                        } className="p-3 w-56 m-auto text-sm bg-gradient-to-l to-second from-main hover:from-transparent text-white rounded-3xl border border-main uppercase font-medium hover:text-main duration-150 flex justify-center">
+                            Next
+                        </button> : <button
+                            disabled={!registerFormik.isValid || !registerFormik.dirty || state.loading}
+                            type='submit'
+                            className={`p-3 w-56 m-auto text-sm bg-gradient-to-l to-second from-main hover:from-transparent text-white rounded-3xl border border-main uppercase font-medium hover:text-main duration-150 flex justify-center ${state.loading && 'cursor-not-allowed'}`}
+                        >
+                            {state.loading ? <><TbLoader className="animate-spin mx-1" size={18} /> Loading...</> : "Sign Up"}
+                        </button>}
                     </div>
-                    <p className='font-medium text-base'>Enter your name</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div className="f-name">
-                            <input
-                                onBlur={registerFormik.handleBlur}
-                                value={registerFormik.values.firstName}
-                                onChange={registerFormik.handleChange}
-                                name='firstName'
-                                type="text"
-                                id='firstName'
-                                className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
-                                placeholder="First Name"
-                            />
-                            {registerFormik.errors.firstName && registerFormik.touched.firstName ? (
-                                <div className="py-1 text-warning">{registerFormik.errors.firstName}</div>
-                            ) : null}
-                        </div>
-                        <div className="l-name">
-                            <input
-                                onBlur={registerFormik.handleBlur}
-                                value={registerFormik.values.lastName}
-                                onChange={registerFormik.handleChange}
-                                name='lastName'
-                                type="text"
-                                id='lastName'
-                                className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
-                                placeholder="Last Name"
-                            />
-                            {registerFormik.errors.lastName && registerFormik.touched.lastName ? (
-                                <div className="py-1 text-warning">{registerFormik.errors.lastName}</div>
-                            ) : null}
-                        </div>
-                    </div>
-                    <p className='font-medium text-base pt-4'>Enter your email</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-1 gap-5">
-                        <div className="email">
-                            <input
-                                onBlur={registerFormik.handleBlur}
-                                value={registerFormik.values.email}
-                                onChange={registerFormik.handleChange}
-                                name='email'
-                                type="email"
-                                id='email'
-                                className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
-                                placeholder="Email"
-                            />
-                            {registerFormik.errors.email && registerFormik.touched.email ? (
-                                <div className="py-1 text-warning">{registerFormik.errors.email}</div>
-                            ) : null}
-                        </div>
-                    </div>
-                    <p className='font-medium text-base pt-4'>Enter your Password</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-1 gap-5">
-                        <div className="pass">
-                            <div className="w-full relative">
-                                <input
-                                    onBlur={registerFormik.handleBlur}
-                                    value={registerFormik.values.password}
-                                    onChange={registerFormik.handleChange}
-                                    id='password'
-                                    name='password'
-                                    type={passType ? "password" : "text"}
-                                    className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
-                                    placeholder="Enter your password"
-                                />
-                                <button
-                                    type='button'
-                                    className='absolute right-2 top-1/2 -translate-y-1/2 hover:text-main'
-                                    onClick={() => setPassType(!passType)}
-                                >
-                                    {passType ? <BsEye /> : <BsEyeSlash />}
-                                </button>
-                            </div>
-                            {registerFormik.errors.password && registerFormik.touched.password ? (
-                                <div className="py-1 text-warning">{registerFormik.errors.password}</div>
-                            ) : null}
-                        </div>
-                        <div className="c-pass">
-                            <div className="w-full relative">
-                                <input
-                                    onBlur={registerFormik.handleBlur}
-                                    value={registerFormik.values.confirmPassword}
-                                    onChange={registerFormik.handleChange}
-                                    id='confirmPassword'
-                                    name='confirmPassword'
-                                    type={passType ? "password" : "text"}
-                                    className="w-full py-3 border-b border-black dark:border-light outline-none bg-transparent"
-                                    placeholder="Confirm password"
-                                />
-                                <button
-                                    type='button'
-                                    className='absolute right-2 top-1/2 -translate-y-1/2 hover:text-main'
-                                    onClick={() => setPassType(!passType)}
-                                >
-                                    {passType ? <BsEye /> : <BsEyeSlash />}
-                                </button>
-                            </div>
-                            {registerFormik.errors.confirmPassword && registerFormik.touched.confirmPassword ? (
-                                <div className="py-1 text-warning">{registerFormik.errors.confirmPassword}</div>
-                            ) : null}
-                        </div>
-                    </div>
-                    <button
-                        disabled={!registerFormik.isValid || !registerFormik.dirty || state.loading}
-                        type='submit'
-                        className={`p-3 w-56 m-auto text-sm bg-gradient-to-l to-second from-main hover:from-transparent text-white rounded-3xl border border-main uppercase font-medium hover:text-main duration-150 flex justify-center ${state.loading && 'cursor-not-allowed'}`}
-                    >
-                        {state.loading ? <><TbLoader className="animate-spin mx-1" size={18} /> Loading...</> : "Sign Up"}
-                    </button>
                     <div className='text-center'>
                         <p>Already have an account? <Link className='text-main' to="/signin">Sign in</Link></p>
                     </div>

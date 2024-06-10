@@ -80,7 +80,6 @@ export const addPerson = createAsyncThunk("persons/addOne", async ({ body, token
     }
 });
 
-
 export const updatePerson = createAsyncThunk("persons/updateOne", async ({ id, person, userId }, { rejectWithValue }) => {
     try {
         const { data } = await axios.put(`${baseUrl}/Persons/${userId || user}/persons/${id}`, person);

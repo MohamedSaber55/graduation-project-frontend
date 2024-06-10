@@ -26,7 +26,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     {links.map((link, index) => (
                         <li key={index} className={`flex items-center rounded-lg ${location.pathname === link.to ? 'bg-main text-white' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
                             <Link to={link.to} className={`flex items-center space-x-2 w-full text-lg delay-300 transition-transform p-2 ${isOpen ? "" : "justify-center"}`} onClick={() => setIsOpen(false)}>
-                                <span className={`${isOpen ? "basis-6" : ""} transform delay-3`}>
+                                <span className={`${isOpen ? "basis-6" : ""} transform delay-300`}>
                                     {link.icon}
                                 </span>
                                 <span className={`transition delay-200 text-base ${isOpen ? "" : "sr-only opacity-0"}`}>{link.title}</span>
