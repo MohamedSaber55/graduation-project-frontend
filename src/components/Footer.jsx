@@ -1,16 +1,20 @@
 import { Link } from "react-router-dom"
 import { FaFacebookF, FaLinkedinIn, FaTwitter, FaInstagram, FaChevronRight } from "react-icons/fa6"
-import logo from "./../assets/logo.png"
+import { useSelector } from "react-redux"
 
 const Footer = () => {
+    const theme = useSelector(state => state.theme.theme)
     return (
         <footer className="bg-white dark:bg-dark">
             <div className="container p-6 text-dark dark:text-light">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-16">
                     <div className="col-span-2 text-left">
                         <div className="logo rounded-full ">
-                            <Link to="/" className='flex gap-1 items-center'>
-                                <img src={logo} className='h-12' alt="Logo" />
+                            <Link to="/" className="flex gap- items-center">
+                                {theme == "dark" ?
+                                    <img src={"/logo-dark.png"} className="h-16" alt="Logo" /> :
+                                    <img src={"/logo.png"} className="h-16" alt="Logo" />}
+                                <h1 className="text-main font-bold text-3xl">Tracker</h1>
                             </Link>
                         </div>
                         <p className="text-sm leading-6 pt-2">

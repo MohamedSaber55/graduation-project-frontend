@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import DarkBtn from '../components/DarkBtn';
-import { logout } from '../store/slices/authSlice';
+import { getUserById, logout } from '../store/slices/authSlice';
 import { TfiClose } from 'react-icons/tfi';
 import { VscMenu } from 'react-icons/vsc';
 import avatar from "./../assets/avatar2.jpg"
@@ -16,7 +16,11 @@ const TopNav = ({ isOpen, toggleSidebar }) => {
     const handleLogout = () => {
         dispatch(logout());
     };
-    const userImage = localStorage.getItem("trackerUserImage")
+    const userImage = state.user?.image
+
+    useEffect(() => {
+        dispatch(getUserById({ token: state.token, userId: state.userId }))
+    },[dispatch, state.token, state.userId])
 
     const handleProfileDropdownToggle = () => {
         setProfileDropdownOpen(!profileDropdownOpen);

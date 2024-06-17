@@ -53,7 +53,6 @@ export const addComplain = createAsyncThunk("Complains/addOne", async (body, { r
         notify('Complain added successfully', 'success');
         return data;
     } catch (error) {
-        console.log(error);
         notify('Failed to add Complain', 'error');
         return rejectWithValue(error.response.data);
     }

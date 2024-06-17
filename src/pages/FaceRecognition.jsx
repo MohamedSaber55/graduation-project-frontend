@@ -95,7 +95,7 @@ const FaceRecognition = () => {
                     </div> */}
                     <div className="submit button bg-white dark:bg-dark py-4 px-5 rounded-md mt-5 flex justify-center">
                         <button type="submit" className="bg-main text-lg py-2 px-8 text-white dark:hover:text-light hover:text-dark hover:bg-transparent border border-main rounded-lg duration-150" disabled={loading}>
-                            Submit
+                            {loading ? "Loading..." : "Submit"}
                         </button>
                     </div>
                 </form>

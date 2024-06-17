@@ -45,7 +45,7 @@ const Home = () => {
         control: (provided, state) => ({
             ...provided,
             border: "none",
-            borderRadius: "6px",
+            borderRadius: "10px",
             // borderRadius: "0.5rem",
             backgroundColor: theme === "dark" ? "#1f293700" : "#f3f4f600",
             color: theme === "dark" ? "#fff" : "#000",

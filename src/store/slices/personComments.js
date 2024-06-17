@@ -12,14 +12,13 @@ const notify = (msg, type) => toast[type](msg);
 export const addPersonComment = createAsyncThunk(
     "comments/addOne",
     async ({ body, userId, personId }, { rejectWithValue }) => {
-        console.log({ body, userId, personId });
         try {
             const { data } = await axios.post(`${baseUrl}/PersonComments/${userId || user}/persons/${personId}/comments`, body);
-            console.log(data);
             notify('Comment added successfully', 'success');
+            console.log(data);
             return data;
         } catch (error) {
-            console.error(error.response);
+            console.log(error.response);
             notify('Failed to add comment', 'error');
             return rejectWithValue(error.response.data);
         }
@@ -63,10 +62,8 @@ export const getPersonComments = createAsyncThunk(
                     "Authorization": "Bearer " + getToken()
                 }
             });
-            console.log(data);
             return data;
         } catch (error) {
-            console.error(error.response);
             notify('Failed to fetch comments', 'error');
             return rejectWithValue(error.response.data);
         }
@@ -91,9 +88,8 @@ const itemCommentsSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addPersonComment.fulfilled, (state, action) => {
+            .addCase(addPersonComment.fulfilled, (state) => {
                 state.loading = false;
-                state.comments.push(action.payload);
             })
             .addCase(addPersonComment.rejected, (state, action) => {
                 state.loading = false;

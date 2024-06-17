@@ -17,7 +17,6 @@ const Item = () => {
     const itemCommentsState = useSelector(state => state.itemComments)
     const authState = useSelector(state => state.user)
     const item = state.item
-    console.log(itemCommentsState);
     useEffect(() => {
         dispatch(getOneItem({ id: itemId, token: authState.token }))
         dispatch(getItemComments(itemId))

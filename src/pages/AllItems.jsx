@@ -9,10 +9,10 @@ const AllItems = () => {
     const itemsState = useSelector(state => state.items);
     const authState = useSelector(state => state.user);
     const dispatch = useDispatch();
-    const items = itemsState.items|| [];
+    const items = itemsState.items || [];
     const isLoading = itemsState.loading;
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage,setItemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const handleItemsPerPageChange = (event) => {
         setItemsPerPage(parseInt(event.target.value));
         setCurrentPage(1);
@@ -21,9 +21,10 @@ const AllItems = () => {
         dispatch(getAllItems(authState.token));
     }, [authState.token, dispatch]);
 
-    const search = (name) => {
-        const params = { name };
-        if (name) {
+    const search = (e) => {
+        e.preventDefault()
+        const params = { uniqNumber: e.target.value };
+        if (params) {
             dispatch(getAllItemsSearch({ token: authState.token, params }));
         } else {
             dispatch(getAllItems(authState.token));
@@ -41,9 +42,9 @@ const AllItems = () => {
 
     return (
         <div className={`bg-light dark:bg-dark-light text-dark dark:text-light min-h-screen transition-colors duration-500`}>
-            {isLoading ? (
+            {/* {isLoading ? (
                 <Loading />
-            ) : (
+            ) : ( */}
                 <div className="container mx-auto p-4">
                     <div className="flex items-center gap-5 flex-wrap justify-between mb-4 bg-white dark:bg-dark p-4 rounded-md">
                         <h1 className="text-3xl font-semibold">All Items</h1>
@@ -51,7 +52,7 @@ const AllItems = () => {
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                onChange={e => search(e.target.value)}
+                                onChange={e => search(e)}
                                 className={`px-2 py-3 w-full rounded-lg text-sm bg-transparent border border-main`}
                             />
                         </div>
@@ -81,7 +82,7 @@ const AllItems = () => {
                         </>
                     )}
                 </div>
-            )}
+            {/* )} */}
         </div>
     );
 };

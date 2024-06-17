@@ -3,10 +3,9 @@ import { TfiClose } from 'react-icons/tfi';
 import { VscMenu } from "react-icons/vsc";
 import { Link } from "react-router-dom";
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
-// import logo from "./../../assets/logo.png";
 import DarkBtn from "../DarkBtn";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../store/slices/authSlice";
+import { getUserById, logout } from "../../store/slices/authSlice";
 import avatar from "./../../assets/avatar2.jpg"
 
 const links = [
@@ -31,8 +30,8 @@ const Navbar = () => {
     const [position, setPosition] = useState("absolute");
     const navbarRef = useRef(null);
     const state = useSelector(state => state.user);
-
-    const userImage = localStorage.getItem("trackerUserImage")
+    const theme = useSelector(state => state.theme.theme)
+    const userImage = state.user?.image
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY >= 64) {
@@ -47,6 +46,10 @@ const Navbar = () => {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    useEffect(() => {
+        dispatch(getUserById({ token: state.token, userId: state.userId }))
+    }, [dispatch, state.token, state?.userId])
 
     // useEffect(() => {
     //     // Function to handle clicks outside the dropdowns
@@ -88,8 +91,9 @@ const Navbar = () => {
                     <div className="flex flex-1 items-center justify-between md:items-stretch">
                         <div className="flex items-center">
                             <Link to="/" className="flex gap- items-center">
-                                <img src={"/logo.png"} className="h-16" alt="Logo" />
-                                <h1 className="text-main font-bold text-3xl">Tracker</h1>
+                            {theme == "dark" ?
+                                    <img src={"/logo-dark.png"} className="h-16" alt="Logo" /> :
+                                    <img src={"/logo.png"} className="h-16" alt="Logo" />}                                <h1 className="text-main font-bold text-3xl">Tracker</h1>
                             </Link>
                         </div>
                         <div className="hidden md:flex gap-4 items-center">

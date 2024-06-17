@@ -67,14 +67,12 @@ export const register = createAsyncThunk("auth/register", async (body) => {
                 "Content-Type": "multipart/form-data"
             }
         });
-        console.log(data);
         if (data.data === "Email verification has been sent to your email successfully. Please verify it!") {
             notify('Now, Check your Email', 'success');
         }
 
         return data;
     } catch (error) {
-        console.log(error.response);
         return error.response.data;
         // If you want to use rejectWithValue, you need to pass it as a second parameter to the async function
         // return rejectWithValue(error.response.data);
@@ -89,10 +87,6 @@ export const login = createAsyncThunk("auth/login", async (body) => {
         localStorage.setItem("trackerToken", data.token)
         localStorage.setItem("trackerRole", data.role)
         localStorage.setItem("trackerUserId", data.id)
-        localStorage.setItem("trackerUserImage", data.image)
-        localStorage.setItem("trackerUserFName", data.firstName)
-        localStorage.setItem("trackerUserLName", data.lastName)
-        localStorage.setItem("trackerUserEmail", data.email)
         return data;
     } catch (error) {
         return error.response.data;
@@ -156,10 +150,21 @@ export const updateProfile = createAsyncThunk("user/update", async ({ body, user
                 'Content-Type': 'multipart/form-data'
             }
         });
-        console.log(data);
+        getUserById({ userId, token })
         return data;
     } catch (error) {
-        console.log(error.response);
+        return rejectWithValue(error.response.data);
+    }
+});
+export const getUserById = createAsyncThunk("user/getUserById", async ({ userId, token }, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get(`${baseUrl}/Account/getUserInfo/${userId || user}`, {
+            headers: {
+                "Authorization": "Bearer " + (token || getToken()),
+            }
+        });
+        return data;
+    } catch (error) {
         return rejectWithValue(error.response.data);
     }
 });
@@ -210,6 +215,25 @@ const authSlice = createSlice({
                     state.error = action.payload
                 }
                 state.error = action.payload
+            })
+            // -------------------------------------------------------------
+            .addCase(getUserById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getUserById.fulfilled, (state, action) => {
+                if (action.payload?.errors?.length > 0) {
+                    state.error = action.payload.errors
+                }
+                state.loading = false;
+                state.user = action.payload.data;
+            })
+            .addCase(getUserById.rejected, (state, action) => {
+                state.loading = false;
+                if (action.payload == "User not found.") {
+                    state.error = action.payload.message
+                }
+                state.error = action.payload.message
             })
             // -------------------------------------------------------------
             .addCase(getAllUsersSearch.pending, (state) => {

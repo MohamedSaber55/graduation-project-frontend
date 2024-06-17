@@ -6,6 +6,7 @@ import { getUserPersons } from '../store/slices/personsSlice';
 import { getUserItems } from '../store/slices/itemSlice';
 import avatar from "./../assets/IMG_20240504_113453.png";
 import Post from '../components/Post';
+import { getUserById } from '../store/slices/authSlice';
 
 const Profile = () => {
     const [activeTab, setActiveTab] = useState('persons');
@@ -24,15 +25,16 @@ const Profile = () => {
         setCurrentPage(1);
     };
     useEffect(() => {
-        dispatch(getUserItems({ token: authState.token}));
+        dispatch(getUserItems({ token: authState.token }));
         dispatch(getUserPersons({ token: authState.token }));
-    }, [authState.token, dispatch]);
+        dispatch(getUserById({ token: authState.token, userId: authState.userId }));
+    }, [authState.token, authState.userId, dispatch]);
 
 
-    const userImage = localStorage.getItem("trackerUserImage")
-    const userFName = localStorage.getItem("trackerUserFName")
-    const userLName = localStorage.getItem("trackerUserLName")
-    const userEmail = localStorage.getItem("trackerUserEmail")
+    const userImage = authState?.user?.image
+    const userFName = authState.user?.firstName
+    const userLName = authState.user?.lastName
+    const userEmail = authState.user?.email
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
