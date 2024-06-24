@@ -31,6 +31,8 @@ import Complains from './dashboard/Complains'
 import Users from './dashboard/Users'
 import FaceRecognition from './pages/FaceRecognition'
 import OCRCards from './pages/OCR'
+import UpdateItem from './pages/UpdateItem'
+import UpdatePerson from './pages/UpdatePerson'
 
 function App() {
 
@@ -44,7 +46,9 @@ function App() {
         { path: "/ocr", element: <ProtectedRoutes> <OCRCards /></ProtectedRoutes> },
         { path: "/contact", element: <ProtectedRoutes><Contact /></ProtectedRoutes> },
         { path: "/items", element: <ProtectedRoutes><AllItems /></ProtectedRoutes> },
+        { path: "/item/update/:itemId", element: <ProtectedRoutes><UpdateItem /></ProtectedRoutes> },
         { path: "/persons", element: <ProtectedRoutes><AllPersons /></ProtectedRoutes> },
+        { path: "/person/update/:personId", element: <ProtectedRoutes><UpdatePerson /></ProtectedRoutes> },
         { path: "/profile", element: <ProtectedRoutes><Profile /></ProtectedRoutes> },
         { path: "/settings", element: <ProtectedRoutes><Settings /></ProtectedRoutes> },
         { path: "/post/:postId", element: <ProtectedRoutes><Post /></ProtectedRoutes> },

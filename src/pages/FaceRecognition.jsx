@@ -16,11 +16,11 @@ const FaceRecognition = () => {
         setFile(file);
         setImagePreview(URL.createObjectURL(file));
     };
-    useEffect(() => {
-        if (personsData) {
-            navigate(`/search/persons/${personsData}`);
-        }
-    }, [personsData, navigate]);
+    // useEffect(() => {
+    //     if (personsData) {
+    //         navigate(`/search/persons/${personsData}`);
+    //     }
+    // }, [personsData, navigate]);
     const handleDragOver = (e) => {
         e.preventDefault();
     };
@@ -34,7 +34,10 @@ const FaceRecognition = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await dispatch(faceRecognition({ file }));
+        const result = await dispatch(faceRecognition({ file }));
+        if (faceRecognition.fulfilled.match(result)) {
+            navigate(`/search/persons/${result?.payload?.prediction}`);
+        }
     };
 
 

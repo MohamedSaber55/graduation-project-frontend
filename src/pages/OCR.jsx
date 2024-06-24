@@ -17,11 +17,11 @@ const OCR = () => {
         setFile(file);
         setImagePreview(URL.createObjectURL(file));
     };
-    useEffect(() => {
-        if (cardsData) {
-            navigate(`/search/items/${cardsData}`);
-        }
-    }, [cardsData, navigate]);
+    // useEffect(() => {
+    //     if (cardsData) {
+    //         navigate(`/search/items/${cardsData}`);
+    //     }
+    // }, [cardsData, navigate]);
     const handleDragOver = (e) => {
         e.preventDefault();
     };
@@ -35,7 +35,11 @@ const OCR = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(ocr({ file }));
+        const result = await dispatch(ocr({ file }))
+        // console.log(result);
+        if (ocr.fulfilled.match(result)) {
+            navigate(`/search/items/${result?.payload?.id}`);
+        }
     };
 
     return (

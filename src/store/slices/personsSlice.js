@@ -80,12 +80,25 @@ export const addPerson = createAsyncThunk("persons/addOne", async ({ body, token
     }
 });
 
-export const updatePerson = createAsyncThunk("persons/updateOne", async ({ id, person, userId }, { rejectWithValue }) => {
+export const updatePerson = createAsyncThunk("persons/updateOne", async ({ personId, body, token, userId }, { rejectWithValue }) => {
+    console.log({ personId, body, token, userId });
     try {
-        const { data } = await axios.put(`${baseUrl}/Persons/${userId || user}/persons/${id}`, person);
+        const formData = new FormData();
+
+        Object.keys(body).forEach(key => {
+            formData.append(key, body[key]);
+        });
+        const { data } = await axios.put(`${baseUrl}/Persons/${userId || user}/persons/${personId}`, formData, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+            }
+        });
+        console.log(data);
         notify('Person updated successfully', 'success');
         return data;
     } catch (error) {
+        console.log(error.response);
         notify('Failed to update person', 'error');
         return rejectWithValue(error.response.data);
     }

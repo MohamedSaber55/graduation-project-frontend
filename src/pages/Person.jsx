@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import Loading from "./Loading";
-import { CiLink } from "react-icons/ci";
+import { CiEdit, CiLink } from "react-icons/ci";
 import { getOnePerson } from "../store/slices/personsSlice";
 import moment from "moment";
 import CommentList from "../components/CommentList";
@@ -47,7 +47,12 @@ const Person = () => {
                                 />
                             </div>
                         </div>
-                        <div className="item bg-white dark:bg-dark flex items-center p-4 rounded-lg">
+                        <div className="relative item bg-white dark:bg-dark flex items-center p-4 rounded-lg">
+                            <div className="absolute end-3 top-3 text-main border rounded-md p-1 border-main ">
+                                <Link className="" to={`/person/update/${personId}`}>
+                                    <CiEdit className="" size={24} />
+                                </Link>
+                            </div>
                             <div className="space-y-4">
                                 <h2 className="text-3xl font-bold">{person.personName}</h2>
                                 <p className="text-lg font-medium flex gap-4">
@@ -100,7 +105,7 @@ const Person = () => {
                     </div>
                     <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
                         <h3 className="text-main text-2xl font-semibold mb-2">Comments</h3>
-                        <CommentList comments={personCommentsState.comments} />
+                        <CommentList type={"persons"} itemId={personId} comments={personCommentsState.comments} />
                     </div>
                     <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
                         <h3 className="text-main text-2xl font-semibold mb-2">Add Comment</h3>

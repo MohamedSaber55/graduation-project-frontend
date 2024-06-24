@@ -56,6 +56,7 @@ const AddPost = () => {
             ItemName: "",
             phoneNumber: "",
             status: "",
+            UniqNumber: "",
             location: "",
             dateTime: "",
             communicationLink: "",
@@ -158,7 +159,7 @@ const AddPost = () => {
     // Define gender options
     const genderOptions = [
         { value: '0', label: 'Male' },
-        { value: '0', label: 'Female' },
+        { value: '1', label: 'Female' },
     ];
 
     return (

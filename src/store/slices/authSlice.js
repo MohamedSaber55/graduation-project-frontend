@@ -17,7 +17,6 @@ export const getAllUsers = createAsyncThunk("auth/getAllUsers", async (token) =>
         return data;
     } catch (error) {
         return error.response.data;
-        // return rejectWithValue(error.response.data);
     }
 });
 export const getAllUsersSearch = createAsyncThunk("auth/getAllUsersSearch", async ({ token, params }) => {
@@ -31,7 +30,6 @@ export const getAllUsersSearch = createAsyncThunk("auth/getAllUsersSearch", asyn
         return data;
     } catch (error) {
         return error.response.data;
-        // return rejectWithValue(error.response.data);
     }
 });
 
@@ -48,16 +46,13 @@ export const deleteUser = createAsyncThunk("auth/deleteUser", async (id, token) 
     } catch (error) {
         notify('Failed to delete User', 'error');
         return error.response.data;
-        // return rejectWithValue(error.response.data);
     }
 });
 
 export const register = createAsyncThunk("auth/register", async (body) => {
     try {
-        // Create a new FormData object
         const formData = new FormData();
 
-        // Append each property of the body to the FormData object
         Object.keys(body).forEach(key => {
             formData.append(key, body[key]);
         });
@@ -74,8 +69,6 @@ export const register = createAsyncThunk("auth/register", async (body) => {
         return data;
     } catch (error) {
         return error.response.data;
-        // If you want to use rejectWithValue, you need to pass it as a second parameter to the async function
-        // return rejectWithValue(error.response.data);
     }
 });
 export const login = createAsyncThunk("auth/login", async (body) => {
@@ -137,13 +130,11 @@ export const resetPassword = createAsyncThunk("auth/resetPassword", async (body,
 
 export const updateProfile = createAsyncThunk("user/update", async ({ body, userId, token }, { rejectWithValue }) => {
     try {
-        // Create a FormData object and append the body properties
         const formData = new FormData();
         for (const key in body) {
             formData.append(key, body[key]);
         }
 
-        // Make the PUT request with multipart/form-data
         const { data } = await axios.put(`${baseUrl}/User/users/${userId || user}`, formData, {
             headers: {
                 "Authorization": "Bearer " + (token || getToken()),
@@ -206,7 +197,6 @@ const authSlice = createSlice({
                     state.error = action.payload
                 }
                 state.loading = false;
-                // state.message = action.payload;
                 state.users = action.payload;
             })
             .addCase(getAllUsers.rejected, (state, action) => {
@@ -245,7 +235,6 @@ const authSlice = createSlice({
                     state.error = action.payload.errors
                 }
                 state.loading = false;
-                // state.message = action.payload;
                 state.users = action.payload.data;
             })
             .addCase(getAllUsersSearch.rejected, (state, action) => {

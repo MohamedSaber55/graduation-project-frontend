@@ -47,11 +47,9 @@ export const getOneItem = createAsyncThunk("items/getOne", async ({ id, token },
 export const addItem = createAsyncThunk("items/addOne", async ({ body, token, userId }, { rejectWithValue }) => {
     try {
         const formData = new FormData();
-
         Object.keys(body).forEach(key => {
             formData.append(key, body[key]);
         });
-
         const { data } = await axios.post(`${baseUrl}/Items/${userId || user}/items`, formData, {
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -77,12 +75,27 @@ export const getUserItems = createAsyncThunk("items/getUserItems", async ({ toke
         return rejectWithValue(error.response.data);
     }
 });
-export const updateItem = createAsyncThunk("items/updateOne", async ({ id, item, userId }, { rejectWithValue }) => {
+export const updateItem = createAsyncThunk("items/updateOne", async ({ itemId, body, token, userId }, { rejectWithValue }) => {
+    console.log({ itemId, body, token, userId });
     try {
-        const { data } = await axios.put(`${baseUrl}/Items/${userId || user}/items/${id}`, item);
+        const formData = new FormData();
+
+        Object.keys(body).forEach(key => {
+            formData.append(key, body[key]);
+        });
+        const { data } = await axios.put(`${baseUrl}/Items/${userId || user}/items/${itemId}`, formData, {
+            headers: {
+                "Authorization": `Bearer ${token || getToken()}`,
+                "Content-Type": "multipart/form-data",
+            }
+        });
+        console.log('====================================');
+        console.log(data);
+        console.log('====================================');
         notify('Item updated successfully', 'success');
         return data;
     } catch (error) {
+        console.log(error.response);
         notify('Failed to update item', 'error');
         return rejectWithValue(error.response.data);
     }
@@ -192,12 +205,12 @@ const itemsSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(updateItem.fulfilled, (state, action) => {
+            .addCase(updateItem.fulfilled, (state) => {
                 state.loading = false;
-                const index = state.items.findIndex(item => item.id === action.payload.id);
-                if (index !== -1) {
-                    state.items[index] = action.payload;
-                }
+                // const index = state.items.findIndex(item => item.id === action.payload.id);
+                // if (index !== -1) {
+                //     state.items[index] = action.payload;
+                // }
             })
             .addCase(updateItem.rejected, (state, action) => {
                 state.loading = false;

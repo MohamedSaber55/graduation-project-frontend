@@ -1,11 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getOneItem } from "../store/slices/itemSlice";
 import moment from "moment";
 import Loading from "./Loading";
-import { CiLink } from "react-icons/ci";
+import { CiEdit, CiLink } from "react-icons/ci";
 import CommentList from "../components/CommentList";
 import CommentForm from "../components/CommentForm";
 import { getItemComments } from "../store/slices/itemComments";
@@ -35,7 +35,12 @@ const Item = () => {
                                 <img src={"http://localhost:5097/Resources/" + item.image} alt={item.itemName} className="max-h-80 object-contain w-full rounded-lg" />
                             </div>
                         </div>
-                        <div className="item bg-white dark:bg-dark flex items- p-4 rounded-lg">
+                        <div className="relative item bg-white dark:bg-dark flex items- p-4 rounded-lg">
+                            <div className="absolute end-3 top-3 text-main border rounded-md p-1 border-main ">
+                                <Link className="" to={`/item/update/${itemId}`}>
+                                    <CiEdit className="" size={24} />
+                                </Link>
+                            </div>
                             <div className="space-y-4">
                                 <h2 className="text-3xl font-bold">{item.itemName}</h2>
                                 <p className="text-lg font-medium flex gap-4"><span className="text-main">Phone:</span><span>{item.phoneNumber}</span></p>
@@ -53,7 +58,7 @@ const Item = () => {
                     </div>
                     <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
                         <h3 className="text-main text-2xl font-semibold mb-2">Comments</h3>
-                        <CommentList comments={itemCommentsState.comments} />
+                        <CommentList type={'items'} itemId={itemId} comments={itemCommentsState.comments} />
                     </div>
                     <div className="bg-white dark:bg-dark rounded-lg p-4 mt-5">
                         <h3 className="text-main text-2xl font-semibold mb-2">Add Comment</h3>

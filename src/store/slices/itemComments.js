@@ -38,12 +38,17 @@ export const updateItemComment = createAsyncThunk(
 
 export const deleteItemComment = createAsyncThunk(
     "comments/deleteOne",
-    async (id, { rejectWithValue }) => {
+    async ({ userId, itemId, commentId }, { rejectWithValue }) => {
         try {
-            await axios.delete(`${baseUrl}/Comments/${id}`);
+            const { data } = await axios.delete(`${baseUrl}/ItemComments/${userId}/items/${itemId}/comments/${commentId}`, {
+                headers: {
+                    "Authorization": "Bearer " + getToken()
+                }
+            });
             notify('Comment deleted successfully', 'success');
-            return id;
+            return data;
         } catch (error) {
+            console.log(error.response);
             notify('Failed to delete comment', 'error');
             return rejectWithValue(error.response.data);
         }
@@ -59,7 +64,6 @@ export const getItemComments = createAsyncThunk(
                     "Authorization": "Bearer " + getToken()
                 }
             });
-            console.log(data);
             return data;
         } catch (error) {
             notify('Failed to fetch comments', 'error');
