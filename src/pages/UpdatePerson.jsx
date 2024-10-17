@@ -38,8 +38,6 @@ const UpdatePerson = () => {
         age: string().optional("Age is optional"),
     });
 
-    console.log(person);
-
     // Status options
     const statusOptions = [
         { value: '0', label: 'Lost' },

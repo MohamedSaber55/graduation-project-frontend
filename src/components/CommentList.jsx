@@ -8,7 +8,6 @@ const CommentList = ({ comments, itemId, type }) => {
     const dispatch = useDispatch()
     const authSlice = useSelector((state) => state.user);
     const handleDelete = (commentId) => {
-        console.log({ itemId, commentId, userId: authSlice.userId });
         if (type == "persons") {
             dispatch(deletePersonComment({ itemId, commentId, userId: authSlice.userId })).then(() => {
                 dispatch(getPersonComments(itemId))

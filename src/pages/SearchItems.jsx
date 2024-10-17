@@ -24,6 +24,7 @@ const SearchItems = () => {
     useEffect(() => {
         const params = {
             UniqNumber: searchWord
+            // name: searchWord
         }
         dispatch(getAllItemsSearch({ token: authState.token, params }));
     }, [authState.token, dispatch, searchWord]);

@@ -36,7 +36,6 @@ const OCR = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const result = await dispatch(ocr({ file }))
-        // console.log(result);
         if (ocr.fulfilled.match(result)) {
             navigate(`/search/items/${result?.payload?.id}`);
         }

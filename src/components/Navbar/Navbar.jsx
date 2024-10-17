@@ -91,9 +91,10 @@ const Navbar = () => {
                     <div className="flex flex-1 items-center justify-between md:items-stretch">
                         <div className="flex items-center">
                             <Link to="/" className="flex gap- items-center">
-                            {theme == "dark" ?
+                                {theme == "dark" ?
                                     <img src={"/logo-dark.png"} className="h-16" alt="Logo" /> :
-                                    <img src={"/logo.png"} className="h-16" alt="Logo" />}                                <h1 className="text-main font-bold text-3xl">Tracker</h1>
+                                    <img src={"/logo.png"} className="h-16" alt="Logo" />}
+                                <h1 className="text-main font-bold text-3xl">Tracker</h1>
                             </Link>
                         </div>
                         <div className="hidden md:flex gap-4 items-center">
@@ -126,7 +127,7 @@ const Navbar = () => {
                                 {state.token && (
                                     <div className="relative">
                                         <div onClick={handleProfileDropdownToggle} className="image h-10 aspect-square border rounded-full">
-                                            <img src={"http://localhost:5097/Resources/" + userImage || avatar} className="rounded-full w-full" alt="" />
+                                            <img src={"http://localhost:5097/Resources/" + userImage || avatar} className="rounded-full w-full h-full object-fill " alt="" />
                                         </div>
                                         {/* <FaUserCircle size={34} className="cursor-pointer" onClick={handleProfileDropdownToggle} /> */}
                                         {profileDropdownOpen && (

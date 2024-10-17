@@ -93,7 +93,7 @@ const Profile = () => {
                 <div className="bg-white dark:bg-dark p-3 rounded-md">
                     <div className="userInfo flex flex-col justify-center text-center items-center gap-3">
                         <div className="image h-28 aspect-square border rounded-full">
-                            <img src={"http://localhost:5097/Resources/" + userImage || avatar} className="rounded-full w-full" alt="" />
+                            <img src={"http://localhost:5097/Resources/" + userImage || avatar} className="rounded-full w-full h-full object-fill" alt="" />
                         </div>
                         <div className="info">
                             <h2 className="text-2xl font-bold">{userFName + " " + userLName}</h2>

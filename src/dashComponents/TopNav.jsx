@@ -39,7 +39,7 @@ const TopNav = ({ isOpen, toggleSidebar }) => {
                     {state.token && (
                         <div className="relative">
                             <div onClick={handleProfileDropdownToggle} className="image h-10 aspect-square border rounded-full">
-                                <img src={"http://localhost:5097/Resources/" + userImage || avatar} className="rounded-full w-full" alt="" />
+                                <img src={"http://localhost:5097/Resources/" + userImage || avatar} className="rounded-full w-full h-full object-fill" alt="" />
                             </div>
                             {/* <FaUserCircle size={34} className="cursor-pointer" onClick={handleProfileDropdownToggle} /> */}
                             {profileDropdownOpen && (

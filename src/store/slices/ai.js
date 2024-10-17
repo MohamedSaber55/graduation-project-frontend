@@ -14,7 +14,6 @@ export const faceRecognition = createAsyncThunk("faceRecognition", async (body, 
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(data);
         notify('Face recognition successful!', 'success'); return data;
     } catch (error) {
         notify('Face recognition failed!', 'error');
@@ -49,7 +48,6 @@ export const ocr = createAsyncThunk("ocr", async (body, { rejectWithValue }) => 
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(data);
         if (data.error) {
             notify(data.error, 'error');
         } else {
@@ -83,7 +81,7 @@ const aiSlice = createSlice({
                 state.error = null;
             })
             .addCase(faceRecognition.fulfilled, (state, action) => {
-                state.loading = false; ``
+                state.loading = false;
                 state.personsData = action.payload.prediction;
             })
             .addCase(faceRecognition.rejected, (state, action) => {

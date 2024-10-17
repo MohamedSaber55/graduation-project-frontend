@@ -13,7 +13,7 @@ const Welcome = () => {
                     transition={{ duration: 0.5 }}
                     className="text-main text-4xl  xxs:text-5xl md:text-7xl font-semibold mb-5">Welcome to</motion.h1>
                 <h1 className="flex items-center text-5xl font-bold text-main">
-                    {theme == "dark" ? <img src={"/logo-dark.png"} className='w-16' /> : <img src={"/logo.png"} className='w-16' />}
+                    {theme == "dark" ? <img src={"/logo-dark.png"} className='w-20' /> : <img src={"/logo.png"} className='w-20' />}
                     <span>Tracker</span>
                 </h1>
                 <p className="text-base md:text-xl font-semibold text-center">The connecting  between the advertiser of the missing and the searcher for any missing, <br />

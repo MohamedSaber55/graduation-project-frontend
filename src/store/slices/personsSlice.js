@@ -81,7 +81,6 @@ export const addPerson = createAsyncThunk("persons/addOne", async ({ body, token
 });
 
 export const updatePerson = createAsyncThunk("persons/updateOne", async ({ personId, body, token, userId }, { rejectWithValue }) => {
-    console.log({ personId, body, token, userId });
     try {
         const formData = new FormData();
 
@@ -94,11 +93,9 @@ export const updatePerson = createAsyncThunk("persons/updateOne", async ({ perso
                 "Content-Type": "multipart/form-data",
             }
         });
-        console.log(data);
         notify('Person updated successfully', 'success');
         return data;
     } catch (error) {
-        console.log(error.response);
         notify('Failed to update person', 'error');
         return rejectWithValue(error.response.data);
     }

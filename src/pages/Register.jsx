@@ -48,7 +48,6 @@ const Register = () => {
 
     const handleChange = (event) => {
         const { name, files } = event.target;
-
         if (name === 'imageFile' && files && files[0]) {
             const reader = new FileReader();
             reader.onload = (e) => {

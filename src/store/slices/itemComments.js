@@ -48,7 +48,6 @@ export const deleteItemComment = createAsyncThunk(
             notify('Comment deleted successfully', 'success');
             return data;
         } catch (error) {
-            console.log(error.response);
             notify('Failed to delete comment', 'error');
             return rejectWithValue(error.response.data);
         }
